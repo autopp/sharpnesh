@@ -5,4 +5,5 @@ require 'sharpnesh/version'
 module Sharpnesh
 end
 
+require 'sharpnesh/node'
 require 'sharpnesh/parser'
