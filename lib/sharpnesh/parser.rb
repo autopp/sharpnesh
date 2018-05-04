@@ -4,5 +4,8 @@ module Sharpnesh
   class Parser
     def parse(io, name)
     end
+
+    class ParseError < StandardError
+    end
   end
 end
