@@ -9,3 +9,5 @@ module Sharpnesh
     end
   end
 end
+
+require 'sharpnesh/parser/lexer'
