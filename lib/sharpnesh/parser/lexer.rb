@@ -6,6 +6,9 @@ class Sharpnesh::Parser
       @name = name
       @tokens = []
       @next = 0
+      @pos = 0
+      @line = 1
+      @col = 1
     end
 
     # return next token
@@ -31,7 +34,7 @@ class Sharpnesh::Parser
     private
 
     def tokenize
-      raise NotImplementedError
+
     end
 
     Token = Struct.new('Token', :type, :body, :line, :col)
