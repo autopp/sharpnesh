@@ -34,7 +34,6 @@ class Sharpnesh::Parser
       raise NotImplementedError
     end
 
-    class Token
-    end
+    Token = Struct.new('Token', :type, :body, :line, :col)
   end
 end
