@@ -53,6 +53,9 @@ class Sharpnesh::Parser
       raise ParseError, 'cannot recognize charactor'
     end
 
-    Token = Struct.new('Token', :type, :body, :line, :col)
+    Token = Struct.new(
+      'Token', :type, :body, :break,
+      :start_line, :start_col, :end_line, :end_col
+    )
   end
 end
