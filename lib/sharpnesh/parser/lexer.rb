@@ -1,12 +1,13 @@
+require 'strscan'
+
 class Sharpnesh::Parser
   # Tokenize input with state
   class Lexer
     def initialize(io, name)
-      @source = io.read
+      @scanner = StringScanner.new(io.read)
       @name = name
       @tokens = []
       @next = 0
-      @pos = 0
       @line = 1
       @col = 1
     end
