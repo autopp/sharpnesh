@@ -15,8 +15,8 @@ class Sharpnesh::Parser
     # return next token
     #
     # @return [Token]
-    def next
-      token = peek
+    def next(skip_brank: true)
+      token = peek(skip_brank: skip_brank)
       @next += 0
       token
     end
@@ -24,39 +24,44 @@ class Sharpnesh::Parser
     # return next token (not steped)
     #
     # @return [Token]
-    def peek
+    def peek(skip_brank: true)
       if @next < @tokens.size
         @tokens[@next]
       else
-        tokenize
+        tokenize(skip_brank: skip_brank)
       end
     end
 
     private
 
     RULES = [
-      [/^[a-zA-Z_][a-zA-Z_0-9]*/, :name]
+      { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: :name }
     ].freeze
 
-    def tokenize
-      RULES.each do |pattern, type|
-        pattern.match(source, pos) do |md|
-          body = md[0]
-          token = Token.new(type, body, @line, @col)
-          @col += body.size
-          @pos += body.size
-          @next += 1
-          @tokens << token
-          break token
-        end
+    def tokenize(skip_brank: true)
+      brank = skip_brank ? @scanner.scan(/[ \t]*/) : ''
+      @col += brank.length
+
+      RULES.each do |pattern:, method:, opt:|
+        matched = @scanner.scan(pattern)
+        return send(method, matched, brank, opt) if matched
       end
 
       raise ParseError, 'cannot recognize charactor'
     end
 
+    def on_token(body, brank, type)
+      token = Token.new(type, brank, body, @line, @col)
+      @col += body.length
+      @pos += body.length
+      @next += 1
+      @tokens << token
+      token
+    end
+
     Token = Struct.new(
-      'Token', :type, :body, :break,
-      :start_line, :start_col, :end_line, :end_col
+      'Token', :type, :body, :brank,
+      :start_line, :start_col
     )
   end
 end
