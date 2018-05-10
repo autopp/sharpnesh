@@ -65,5 +65,7 @@ class Sharpnesh::Parser
     TK_BNOT = :~
     TK_INC = :'++'
     TK_DEC = :'--'
+    TK_COND_UNARY_OP = :cond_unary_op
+    TK_COND_BINARY_OP = :cond_binary_op
   end
 end
