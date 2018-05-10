@@ -72,5 +72,22 @@ class Sharpnesh::Parser
     TK_DQUOTE = :'"'
     TK_DOLLAR_SQUOTE :"$'"
     TK_DOLLAR_DQUOTE :'$"'
+    TK_DOLLAR_LBRACE = :'${'
+    TK_AT = :'@'
+    TK_ASTALISK = :TK_MUL
+    TK_USE_DEFAULT_VALUE = :':-'
+    TK_ASSIGN_DEFAULT_VALUE = :':='
+    TK_ERROR_IF_NULL = :':?'
+    TK_USE_ALTERNATE_VALUE = :':+'
+    TK_BRACKET_AT = :'[@]'
+    TK_BRACKET_ASTALISK = :'[*]'
+    TK_SHARP = :'#'
+    TK_SHARP2 = :'##'
+    TK_MOD2 = :'%%'
+    TK_SLASH = TK_DIV
+    TK_BXOR2 = :'^^'
+    TK_COMMA2 = :',,'
+    TK_NAME = :name
+    TK_DECIAML = :decimal
   end
 end
