@@ -67,5 +67,10 @@ class Sharpnesh::Parser
     TK_DEC = :'--'
     TK_COND_UNARY_OP = :cond_unary_op
     TK_COND_BINARY_OP = :cond_binary_op
+    TK_STR = :str
+    TK_SQUOTE = :"'"
+    TK_DQUOTE = :'"'
+    TK_DOLLAR_SQUOTE :"$'"
+    TK_DOLLAR_DQUOTE :'$"'
   end
 end
