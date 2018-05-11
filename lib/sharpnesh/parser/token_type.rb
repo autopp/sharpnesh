@@ -1,4 +1,5 @@
 class Sharpnesh::Parser
+  # Namespace for constants about of token type
   module TokenType
     TK_ASSIGN = :'='
     TK_LPAREN = :'('
