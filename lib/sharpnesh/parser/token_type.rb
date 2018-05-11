@@ -89,5 +89,12 @@ class Sharpnesh::Parser
     TK_COMMA2 = :',,'
     TK_NAME = :name
     TK_DECIAML = :decimal
+    TK_DOLLAR_LPAREN = :'$('
+    TK_BQUOTE = :`
+    TK_DOLLAR_LPAREN2 = :'$(('
+    TK_IN_LPAREN = :'<('
+    TK_OUT_LPAREN = :'>('
+    TK_NEWLINE = :'\n'
+    TK_EOS = :EOS
   end
 end
