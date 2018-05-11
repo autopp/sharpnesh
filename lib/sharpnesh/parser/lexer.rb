@@ -3,6 +3,8 @@ require 'strscan'
 class Sharpnesh::Parser
   # Tokenize input with state
   class Lexer
+    include TokenType
+
     def initialize(io, name)
       @scanner = StringScanner.new(io.read)
       @name = name
@@ -41,6 +43,8 @@ class Sharpnesh::Parser
     def tokenize(skip_brank: true)
       brank = skip_brank ? @scanner.scan(/[ \t]*/) : ''
       @col += brank.length
+
+      return Token.new(TK_EOS, brank, nil, @line, @col) if @scanner.eos?
 
       RULES.each do |pattern:, method:, opt:|
         matched = @scanner.scan(pattern)
