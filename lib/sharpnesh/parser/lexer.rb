@@ -37,7 +37,7 @@ class Sharpnesh::Parser
     private
 
     RULES = [
-      { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: :name }
+      { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME }
     ].freeze
 
     def tokenize(skip_brank: true)
