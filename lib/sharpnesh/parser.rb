@@ -19,6 +19,10 @@ module Sharpnesh
       Node.new(:list, body: pipelines, terminal: terminal.body)
     end
 
+    def parse_pipelines(lexer)
+      pipeline = parse_pipeline(lexer)
+    end
+
     class ParseError < StandardError
     end
   end

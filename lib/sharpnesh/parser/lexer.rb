@@ -18,7 +18,7 @@ class Sharpnesh::Parser
     #
     # @return [Token]
     def next
-      token = peek(skip_brank: skip_brank)
+      token = peek
       @next += 0
       token
     end
@@ -30,7 +30,7 @@ class Sharpnesh::Parser
       if @next < @tokens.size
         @tokens[@next]
       else
-        tokenize(skip_brank: skip_brank)
+        tokenize
       end
     end
 
@@ -47,20 +47,20 @@ class Sharpnesh::Parser
 
     def tokenize
       blank = @scanner.scan(/[ \t]*/)
-      @col += brank.length
+      @col += blank.length
 
-      return Token.new(TK_EOS, brank, nil, @line, @col) if @scanner.eos?
+      return Token.new(TK_EOS, blank, nil, @line, @col) if @scanner.eos?
 
       RULES.each do |pattern:, method:, opt:|
         matched = @scanner.scan(pattern)
-        return send(method, matched, brank, opt) if matched
+        return send(method, matched, blank, opt) if matched
       end
 
       raise ParseError, 'cannot recognize charactor'
     end
 
-    def on_token(body, brank, type)
-      token = Token.new(type, brank, body, @line, @col)
+    def on_token(body, blank, type)
+      token = Token.new(type, blank, body, @line, @col)
       @col += body.length
       @pos += body.length
       @next += 1
@@ -69,7 +69,7 @@ class Sharpnesh::Parser
     end
 
     Token = Struct.new(
-      'Token', :type, :body, :brank,
+      'Token', :type, :body, :blank,
       :start_line, :start_col
     )
   end
