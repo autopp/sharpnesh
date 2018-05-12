@@ -27,6 +27,15 @@ module Sharpnesh
       pipelines
     end
 
+    def parse_pipeline(lexer)
+      not_op = lexer.next(TK_NOT)
+      command = parse_command(lexer)
+      while (pipe = lexer.next(TK_PIPE, TK_PIPE_AND))
+        pipeline = Node.new(:pipe, pipe: pipe, lhs: command, rhs: parse_command(lexer))
+      end
+      Node.new(:pipeline, excl: not_op, command: pipeline)
+    end
+
     class ParseError < StandardError
     end
   end
