@@ -17,7 +17,7 @@ class Sharpnesh::Parser
     # return next token
     #
     # @return [Token]
-    def next(skip_brank: true)
+    def next
       token = peek(skip_brank: skip_brank)
       @next += 0
       token
@@ -26,7 +26,7 @@ class Sharpnesh::Parser
     # return next token (not steped)
     #
     # @return [Token]
-    def peek(skip_brank: true)
+    def peek
       if @next < @tokens.size
         @tokens[@next]
       else
@@ -45,8 +45,8 @@ class Sharpnesh::Parser
       { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME }
     ].freeze
 
-    def tokenize(skip_brank: true)
-      brank = skip_brank ? @scanner.scan(/[ \t]*/) : ''
+    def tokenize
+      blank = @scanner.scan(/[ \t]*/)
       @col += brank.length
 
       return Token.new(TK_EOS, brank, nil, @line, @col) if @scanner.eos?
