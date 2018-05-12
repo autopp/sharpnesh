@@ -34,6 +34,11 @@ class Sharpnesh::Parser
       end
     end
 
+    def back
+      raise 'cannot back empty lexer' if @next == 0
+      @next -= 1
+    end
+
     private
 
     RULES = [
