@@ -45,7 +45,7 @@ module Sharpnesh
 
     def parse_word(lexer)
       if (name = lexer.next(TK_NAME))
-        Node.new(:name, body: name.body)
+        return Node.new(:name, body: name.body)
       end
       raise ParseError, "unexpected token: #{lexer.peek}"
     end
