@@ -20,7 +20,7 @@ module Sharpnesh
 
     def parse_pipelines(lexer)
       pipelines = parse_pipeline(lexer)
-      while (op = lexer.next(TK_LAND, TL_LOR))
+      while (op = lexer.next(TK_LAND, TK_LOR))
         pipelines = Node.new(:pipelines, op: op, lhs: pipelines, rhs: parse_pipeline(lexer))
       end
       pipelines
