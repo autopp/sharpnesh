@@ -11,10 +11,10 @@ describe Sharpnesh::Parser do
       let(:expected) do
         n(:list,
           body: n(:pipeline,
-                  time: nil, opt_p: nil, excl: nil,
+                  excl: nil,
                   command: n(:simple_command,
                              assigns: [], body: [n(:name, body: 'foo')])),
-          terminal: 'EOS', next: nil)
+          terminal: '', next: nil)
       end
 
       it { is_expected.to eq(expected) }
