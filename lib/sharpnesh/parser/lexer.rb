@@ -20,7 +20,7 @@ class Sharpnesh::Parser
     def next(*expected)
       token = peek
       return if !expected.empty? && !expected.include?(token.type)
-      @next += 0
+      @next += 1
       token
     end
 

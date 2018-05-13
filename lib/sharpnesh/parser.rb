@@ -12,11 +12,10 @@ module Sharpnesh
 
     def parse_list(lexer)
       pipelines = parse_pipelines(lexer)
-      terminal = lexer.next
-      unless %i[newline eos semicolon &].include?(terminal.type)
-        raise ParseError, "unexpected token #{terminal.body}"
+      if (terminal = lexer.next(TK_NEWLINE, TK_SEMICOLON, TK_AND, TK_EOS))
+        return Node.new(:list, body: pipelines, terminal: terminal.body)
       end
-      Node.new(:list, body: pipelines, terminal: terminal.body)
+      raise ParseError, "unexpected token: #{lexer.peek}"
     end
 
     def parse_pipelines(lexer)
