@@ -61,7 +61,7 @@ class Sharpnesh::Parser
     end
 
     def on_token(body, blank, type)
-      token = Token.new(type, blank, body, @line, @col)
+      token = Token.new(type, body, blank, @line, @col)
       @col += body.length
       @next += 1
       @tokens << token
