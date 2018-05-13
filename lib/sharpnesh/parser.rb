@@ -41,11 +41,14 @@ module Sharpnesh
     end
 
     def parse_simple_command(lexer)
-      parse_word(lexer)
+      Node.new(:simple_cmd, assigns: [], body: parse_word(lexer))
     end
 
     def parse_word(lexer)
-      lexer.next(TK_NAME) || raise(ParseError, "unexpected token: #{lexer.peek}")
+      if (name = lexer.next(TK_NAME))
+        Node.new(:name, body: name.body)
+      end
+      raise ParseError, "unexpected token: #{lexer.peek}"
     end
 
     class ParseError < StandardError
