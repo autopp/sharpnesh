@@ -36,6 +36,18 @@ module Sharpnesh
       Node.new(:pipeline, excl: not_op, command: pipeline)
     end
 
+    def parse_command(lexer)
+      parse_simple_command(lexer)
+    end
+
+    def parse_simple_command(lexer)
+      parse_word(lexer)
+    end
+
+    def parse_word(lexer)
+      lexer.next(TK_NAME) || raise(ParseError, "unexpected token: #{lexer.peek}")
+    end
+
     class ParseError < StandardError
     end
   end
