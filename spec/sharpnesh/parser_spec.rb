@@ -12,8 +12,8 @@ describe Sharpnesh::Parser do
         n(:list,
           body: n(:pipeline,
                   time: nil, opt_p: nil, excl: nil,
-                  command: n(:simple_cmd,
-                             assigns: [], body: [n(:str, body: 'foo')])),
+                  command: n(:simple_command,
+                             assigns: [], body: [n(:name, body: 'foo')])),
           terminal: 'EOS', next: nil)
       end
 
