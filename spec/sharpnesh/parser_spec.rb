@@ -19,5 +19,17 @@ describe Sharpnesh::Parser do
 
       it { is_expected.to eq(expected) }
     end
+
+    context 'with two word' do
+      let(:src) { 'foo bar' }
+      let(:expected) do
+        n(:list,
+          body: n(:pipeline,
+                  excl: nil,
+                  command: n(:simple_command,
+                             assigns: [], body: [n(:name, body: 'foo'), n(:name, body: 'bar')])),
+          terminal: '', next: nil)
+      end
+    end
   end
 end
