@@ -95,6 +95,7 @@ class Sharpnesh::Parser
     TK_DOLLAR_LPAREN2 = :'$(('
     TK_IN_LPAREN = :'<('
     TK_OUT_LPAREN = :'>('
+    TK_BLANK = :' '
     TK_EOS = :EOS
   end
 end
