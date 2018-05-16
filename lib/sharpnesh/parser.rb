@@ -40,7 +40,16 @@ module Sharpnesh
     end
 
     def parse_simple_command(lexer)
-      Node.new(:simple_command, assigns: [], body: [parse_word(lexer)])
+      body = [parse_word(lexer)]
+      while lexer.next(TK_BLANK)
+        if [TK_LOR, TK_LAND, TK_AND, TK_SEMICOLON, TK_PIPE, TK_PIPE_AND, TK_NEWLINE].include?(lexer.peek.type)
+          lexer.back
+          break
+        end
+        body << parse_word(lexer)
+      end
+
+      Node.new(:simple_command, assigns: [], body: body)
     end
 
     def parse_word(lexer)
