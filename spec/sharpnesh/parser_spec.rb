@@ -30,6 +30,8 @@ describe Sharpnesh::Parser do
                              assigns: [], body: [n(:name, body: 'foo'), n(:name, body: 'bar')])),
           terminal: '', next: nil)
       end
+
+      it { is_expected.to eq(expected) }
     end
   end
 end
