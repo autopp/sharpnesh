@@ -39,10 +39,13 @@ module Sharpnesh
       parse_simple_command(lexer)
     end
 
+    TERMINALS_OF_COMMAND = [
+      TK_LOR, TK_LAND, TK_AND, TK_SEMICOLON, TK_PIPE, TK_PIPE_AND, TK_NEWLINE
+    ].freeze
     def parse_simple_command(lexer)
       body = [parse_word(lexer)]
       while lexer.next(TK_BLANK)
-        if [TK_LOR, TK_LAND, TK_AND, TK_SEMICOLON, TK_PIPE, TK_PIPE_AND, TK_NEWLINE].include?(lexer.peek.type)
+        if TERMINALS_OF_COMMAND.include?(lexer.peek.type)
           lexer.back
           break
         end
