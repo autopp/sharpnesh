@@ -42,7 +42,7 @@ describe Sharpnesh::Parser do
                   excl: nil,
                   command: n(:simple_command,
                              assigns: [], body: [n(:name, body: 'foo')])),
-          terminal: '', next: n(
+          terminal: ';', next: n(
             :list,
             body: n(:pipeline,
                     excl: nil,
