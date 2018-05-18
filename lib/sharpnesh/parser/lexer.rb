@@ -44,6 +44,7 @@ class Sharpnesh::Parser
 
     RULES = [
       { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME },
+      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON },
       { pattern: /[ \t]+/, method: :on_token, opt: TK_BLANK }
     ].freeze
 
