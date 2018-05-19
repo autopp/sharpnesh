@@ -35,6 +35,8 @@ class Sharpnesh::Parser
       end
     end
 
+    # back to previous token
+    #
     def back
       raise 'cannot back empty lexer' if @next.zero?
       @next -= 1
