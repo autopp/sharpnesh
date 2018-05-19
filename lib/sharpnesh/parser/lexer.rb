@@ -42,6 +42,14 @@ class Sharpnesh::Parser
       @next -= 1
     end
 
+    # return whether all tokens are consumed
+    #
+    # @return [Boolean]
+    #
+    def eos?
+      @next > 0 && @tokens[@next - 1].type == TK_EOS
+    end
+
     private
 
     RULES = [
