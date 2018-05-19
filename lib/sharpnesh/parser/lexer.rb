@@ -58,7 +58,7 @@ class Sharpnesh::Parser
         return send(method, matched, blank, opt) if matched
       end
 
-      raise ParseError, 'cannot recognize charactor'
+      raise ParseError, "cannot recognize charactor `#{@scanner.rest[0]}`"
     end
 
     def on_token(body, blank, type)
