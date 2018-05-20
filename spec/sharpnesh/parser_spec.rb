@@ -5,18 +5,18 @@ describe Sharpnesh::Parser do
 
   describe '#parse' do
     subject { parser.parse(StringIO.new(src), 'input.sh') }
+    let(:expected) { n(:root, list: root_list) }
 
     context 'with simple word' do
       let(:src) { 'foo' }
-      let(:expected) do
-        n(:root,
-          list: [
-            n(:pipelines,
-              body: n(:pipeline,
-                      excl: nil,
-                      command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
-              terminal: nil)
-          ])
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
+            terminal: nil)
+        ]
       end
 
       it { is_expected.to eq(expected) }
@@ -24,15 +24,14 @@ describe Sharpnesh::Parser do
 
     context 'with two word' do
       let(:src) { 'foo bar' }
-      let(:expected) do
-        n(:root,
-          list: [
-            n(:pipelines,
-              body: n(:pipeline,
-                      excl: nil,
-                      command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo'), n(:name, body: 'bar')])),
-              terminal: nil)
-          ])
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo'), n(:name, body: 'bar')])),
+            terminal: nil)
+        ]
       end
 
       it { is_expected.to eq(expected) }
@@ -41,19 +40,18 @@ describe Sharpnesh::Parser do
     context 'with two commands' do
       let(:src) { 'foo;bar' }
       let(:expected) do
-        n(:root,
-          list: [
-            n(:pipelines,
-              body: n(:pipeline,
-                      excl: nil,
-                      command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
-              terminal: ';'),
-            n(:pipelines,
-              body: n(:pipeline,
-                      excl: nil,
-                      command: n(:simple_command, assigns: [], body: [n(:name, body: 'bar')])),
-              terminal: nil)
-          ])
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
+            terminal: ';'),
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'bar')])),
+            terminal: nil)
+        ]
       end
 
       it do
