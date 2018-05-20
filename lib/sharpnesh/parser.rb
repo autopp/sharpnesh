@@ -44,7 +44,7 @@ module Sharpnesh
     ].freeze
     def parse_simple_command(lexer)
       body = [parse_word(lexer)]
-      body << parse_word(lexer) until lexer.peek(*CONTROL_OPERATORS)
+      body << parse_word(lexer) while !lexer.peek(*CONTROL_OPERATORS)
 
       Node.new(:simple_command, assigns: [], body: body)
     end

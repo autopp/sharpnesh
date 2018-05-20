@@ -18,7 +18,7 @@ class Sharpnesh::Parser
     #
     # @return [Token]
     def next(*expected)
-      return unless (token = peek(*expected))
+      return if !(token = peek(*expected))
       @next += 1
       token
     end
