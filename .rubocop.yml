@@ -26,6 +26,12 @@ Style/MutableConstant:
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
+Style/NegatedIf:
+  Enabled: false
+
+Style/NegatedWhile:
+  Enabled: false
+
 Metrics/ParameterLists:
   Exclude:
     - spec/**/*
