@@ -16,6 +16,8 @@ class Sharpnesh::Parser
     TK_SELECT = :select
     TK_CASE = :case
     TK_SEMICOLON2 = :';;'
+    TK_SEMICOLON_AND = :';&'
+    TK_SEMICOLON2_AND = :';;&'
     TK_ESAC = :esac
     TK_IF = :if
     TK_THEN = :then
@@ -95,7 +97,6 @@ class Sharpnesh::Parser
     TK_DOLLAR_LPAREN2 = :'$(('
     TK_IN_LPAREN = :'<('
     TK_OUT_LPAREN = :'>('
-    TK_BLANK = :' '
     TK_EOS = :EOS
   end
 end
