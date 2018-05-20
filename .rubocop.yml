@@ -23,6 +23,9 @@ Style/ClassAndModuleChildren:
 Style/MutableConstant:
   AutoCorrect: false
 
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
 Metrics/ParameterLists:
   Exclude:
     - spec/**/*
