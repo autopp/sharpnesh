@@ -7,23 +7,16 @@ module Sharpnesh
 
     def parse(io, name)
       lexer = Lexer.new(io, name)
-      parse_list(lexer)
+      Node.new(:root, list: parse_list(lexer))
     end
 
     def parse_list(lexer)
-      pipelines = parse_pipelines(lexer)
-      if (terminal = lexer.next(TK_NEWLINE, TK_SEMICOLON, TK_AND, TK_EOS))
-        return Node.new(:list, body: pipelines, terminal: terminal.body, next: nil)
-      end
-      raise ParseError, "unexpected token: #{lexer.peek}"
+      [parse_pipelines(lexer)]
     end
 
     def parse_pipelines(lexer)
-      pipelines = parse_pipeline(lexer)
-      while (op = lexer.next(TK_LAND, TK_LOR))
-        pipelines = Node.new(:pipelines, op: op, lhs: pipelines, rhs: parse_pipeline(lexer))
-      end
-      pipelines
+      pipeline = parse_pipeline(lexer)
+      Node.new(:pipelines, body: pipeline, terminal: nil)
     end
 
     def parse_pipeline(lexer)
