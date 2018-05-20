@@ -35,18 +35,16 @@ module Sharpnesh
       parse_simple_command(lexer)
     end
 
-    TERMINALS_OF_COMMAND = [
-      TK_LOR, TK_LAND, TK_AND, TK_SEMICOLON, TK_PIPE, TK_PIPE_AND, TK_NEWLINE
+    CONTROL_OPERATORS = [
+      TK_LOR, TK_AND, TK_LAND, TK_SEMICOLON,
+      TK_SEMICOLON2, TK_SEMICOLON_AND, TK_SEMICOLON2_AND,
+      TK_LPAREN, TK_RPAREN,
+      TK_PIPE, TK_PIPE_AND,
+      TK_NEWLINE, TK_EOS
     ].freeze
     def parse_simple_command(lexer)
       body = [parse_word(lexer)]
-      while lexer.next(TK_BLANK)
-        if TERMINALS_OF_COMMAND.include?(lexer.peek.type)
-          lexer.back
-          break
-        end
-        body << parse_word(lexer)
-      end
+      body << parse_word(lexer) until CONTROL_OPERATORS.include?(lexer.peek.type)
 
       Node.new(:simple_command, assigns: [], body: body)
     end

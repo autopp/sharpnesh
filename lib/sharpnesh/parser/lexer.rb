@@ -54,13 +54,12 @@ class Sharpnesh::Parser
 
     RULES = [
       { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME },
-      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON },
-      { pattern: /[ \t]+/, method: :on_token, opt: TK_BLANK }
+      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
     def tokenize
-      blank = ''
-
+      blank = @scanner.scan(/[ \t]*/)
+      @col += blank.length
       return Token.new(TK_EOS, blank, nil, @line, @col) if @scanner.eos?
 
       RULES.each do |pattern:, method:, opt:|
