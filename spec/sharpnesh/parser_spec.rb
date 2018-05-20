@@ -55,7 +55,6 @@ describe Sharpnesh::Parser do
       end
 
       it do
-        pending
         is_expected.to eq(expected)
       end
     end

@@ -7,16 +7,19 @@ module Sharpnesh
 
     def parse(io, name)
       lexer = Lexer.new(io, name)
-      Node.new(:root, list: parse_list(lexer))
+      Node.new(:root, list: parse_list(lexer, TK_EOS))
     end
 
-    def parse_list(lexer)
-      [parse_pipelines(lexer)]
+    def parse_list(lexer, terminal)
+      list = []
+      list << parse_pipelines(lexer) while lexer.peek.type != terminal
+      list
     end
 
     def parse_pipelines(lexer)
       pipeline = parse_pipeline(lexer)
-      Node.new(:pipelines, body: pipeline, terminal: nil)
+      terminal = (terminal_token = lexer.next(TK_SEMICOLON, TK_NEWLINE, TK_AND))? terminal_token.body : nil
+      Node.new(:pipelines, body: pipeline, terminal: terminal)
     end
 
     def parse_pipeline(lexer)
