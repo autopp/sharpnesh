@@ -12,7 +12,7 @@ module Sharpnesh
 
     def parse_list(lexer, terminal)
       list = []
-      list << parse_pipelines(lexer) while lexer.peek.type != terminal
+      list << parse_pipelines(lexer) while !lexer.peek(terminal)
       list
     end
 
@@ -44,7 +44,7 @@ module Sharpnesh
     ].freeze
     def parse_simple_command(lexer)
       body = [parse_word(lexer)]
-      body << parse_word(lexer) until CONTROL_OPERATORS.include?(lexer.peek.type)
+      body << parse_word(lexer) until lexer.peek(*CONTROL_OPERATORS)
 
       Node.new(:simple_command, assigns: [], body: body)
     end
