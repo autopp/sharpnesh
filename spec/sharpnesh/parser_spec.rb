@@ -54,7 +54,25 @@ describe Sharpnesh::Parser do
         ]
       end
 
+      it { is_expected.to eq(expected) }
+    end
+
+    context 'with a assign' do
+      let(:src) { 'a=x foo' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [n(:assign, name: 'a', value: n(:name, body: 'x'))],
+                               body: [n(:name, body: 'foo')])),
+            terminal: nil)
+        ]
+      end
+
       it do
+        pending
         is_expected.to eq(expected)
       end
     end
