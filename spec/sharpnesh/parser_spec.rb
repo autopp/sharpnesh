@@ -39,7 +39,7 @@ describe Sharpnesh::Parser do
 
     context 'with two commands' do
       let(:src) { 'foo;bar' }
-      let(:expected) do
+      let(:root_list) do
         [
           n(:pipelines,
             body: n(:pipeline,
