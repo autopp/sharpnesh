@@ -18,7 +18,7 @@ module Sharpnesh
 
     def parse_pipelines(lexer)
       pipeline = parse_pipeline(lexer)
-      terminal = (terminal_token = lexer.next(TK_SEMICOLON, TK_NEWLINE, TK_AND))? terminal_token.body : nil
+      terminal = (terminal_token = lexer.next(TK_SEMICOLON, TK_NEWLINE, TK_AND)) ? terminal_token.body : nil
       Node.new(:pipelines, body: pipeline, terminal: terminal)
     end
 
