@@ -17,8 +17,8 @@ class Sharpnesh::Parser
     # return next token
     #
     # @return [Token]
-    def next(*expected)
-      return if !(token = peek(*expected))
+    def next(*expected, allow_blank: true)
+      return if !(token = peek(*expected, allow_blank: allow_blank))
       @next += 1
       token
     end
@@ -26,13 +26,13 @@ class Sharpnesh::Parser
     # return next token (not steped)
     #
     # @return [Token]
-    def peek(*expected)
+    def peek(*expected, allow_blank: true)
       token = if @next < @tokens.size
         @tokens[@next]
       else
         tokenize
       end
-      expected.empty? || expected.include?(token.type) ? token : nil
+      (expected.empty? || expected.include?(token.type)) && (allow_blank || token.blank.empty?) ? token : nil
     end
 
     # back to previous token
