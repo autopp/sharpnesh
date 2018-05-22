@@ -12,6 +12,7 @@ class Sharpnesh::Parser
       @next = 0
       @line = 1
       @col = 1
+      @rules_stack = []
     end
 
     # return next token
@@ -50,9 +51,18 @@ class Sharpnesh::Parser
       @next > 0 && @tokens[@next - 1].type == TK_EOS
     end
 
+    def use_rules(rules)
+      @rules_stack.push(rules)
+      begin
+        yield
+      ensure
+        @rules_stack.pop
+      end
+    end
+
     private
 
-    RULES = [
+    DEFAULT_RULES = [
       { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
@@ -62,7 +72,7 @@ class Sharpnesh::Parser
       @col += blank.length
       return Token.new(TK_EOS, blank, nil, @line, @col) if @scanner.eos?
 
-      RULES.each do |pattern:, method:, opt:|
+      @rules_stack.last.each do |pattern:, method:, opt:|
         matched = @scanner.scan(pattern)
         return send(method, matched, blank, opt) if matched
       end
