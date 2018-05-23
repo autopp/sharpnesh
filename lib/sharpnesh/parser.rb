@@ -7,7 +7,9 @@ module Sharpnesh
 
     def parse(io, name)
       lexer = Lexer.new(io, name)
-      Node.new(:root, list: parse_list(lexer, TK_EOS))
+      lexer.use_rules(Lexer::DEFAULT_RULES) do
+        Node.new(:root, list: parse_list(lexer, TK_EOS))
+      end
     end
 
     def parse_list(lexer, terminal)
@@ -43,6 +45,20 @@ module Sharpnesh
       TK_NEWLINE, TK_EOS
     ].freeze
     def parse_simple_command(lexer)
+      # parse assignments
+      assigns = []
+      while (name = lexer.next(TK_NAME))
+        op = lexer.next(TK_ASSIGN, allow_blank: false)
+        if !op
+          lexer.back
+          break
+        else
+          value = parse_word(lexer)
+          assigns << Node.new(:assign, name: name.body, value: value)
+        end
+      end
+
+      # parse command body
       body = [parse_word(lexer)]
       body << parse_word(lexer) while !lexer.peek(*CONTROL_OPERATORS)
 
