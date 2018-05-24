@@ -36,6 +36,14 @@ class Sharpnesh::Parser
       (expected.empty? || expected.include?(token.type)) && (allow_blank || token.blank.empty?) ? token : nil
     end
 
+    def accept(pattern, type, allow_blank: true)
+      raise RuntimeErrorm, 'cannot call `accept` when buffered' if @next < @tokens.size
+      blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
+      return if !(body = scanner.scan(pattern))
+      @col += body.length + blank.length
+      Token.new(type, body, blank, @line, @col)
+    end
+
     # back to previous token
     #
     def back
