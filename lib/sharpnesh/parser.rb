@@ -48,7 +48,7 @@ module Sharpnesh
       # parse assignments
       assigns = []
       while (name = lexer.next(TK_NAME))
-        op = lexer.next(TK_ASSIGN, allow_blank: false)
+        op = lexer.accept(/[=]/, TK_ASSIGN, allow_blank: false)
         if !op
           lexer.back
           break
@@ -62,7 +62,7 @@ module Sharpnesh
       body = [parse_word(lexer)]
       body << parse_word(lexer) while !lexer.peek(*CONTROL_OPERATORS)
 
-      Node.new(:simple_command, assigns: [], body: body)
+      Node.new(:simple_command, assigns: assigns, body: body)
     end
 
     def parse_word(lexer)
