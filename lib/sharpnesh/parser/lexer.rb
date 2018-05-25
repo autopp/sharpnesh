@@ -38,10 +38,15 @@ class Sharpnesh::Parser
 
     def accept(pattern, type, allow_blank: true)
       raise RuntimeErrorm, 'cannot call `accept` when buffered' if @next < @tokens.size
+      rollback_pos = @scanner.pos
       blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
-      return if !(body = scanner.scan(pattern))
-      @col += body.length + blank.length
-      Token.new(type, body, blank, @line, @col)
+      if (body = @scanner.scan(pattern))
+        @col += body.length + blank.length
+        Token.new(type, body, blank, @line, @col)
+      else
+        @scanner.pos = rollback_pos
+        nil
+      end
     end
 
     # back to previous token
