@@ -93,5 +93,25 @@ describe Sharpnesh::Parser do
 
       it { is_expected.to eq(expected) }
     end
+
+    context 'with string' do
+      let(:src) { 'foo sample-arg.txt' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [n(:name, body: 'foo'), n(:str, body: 'sample-arg.txt')])),
+            terminal: nil)
+        ]
+      end
+
+      it do
+        pending
+        is_expected.to eq(expected)
+      end
+    end
   end
 end
