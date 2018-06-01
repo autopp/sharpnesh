@@ -37,7 +37,7 @@ class Sharpnesh::Parser
     end
 
     def accept(pattern, type, allow_blank: true)
-      raise 'cannot call `accept` when buffered' if @next < @tokens.size
+      raise "cannot call `accept` when buffered (head of buffer is `#{@tokens[@next].body}`)" if @next < @tokens.size
       rollback_pos = @scanner.pos
       blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
       if !(body = @scanner.scan(pattern))
