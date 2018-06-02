@@ -108,10 +108,7 @@ describe Sharpnesh::Parser do
         ]
       end
 
-      it do
-        pending
-        is_expected.to eq(expected)
-      end
+      it { is_expected.to eq(expected) }
     end
   end
 end

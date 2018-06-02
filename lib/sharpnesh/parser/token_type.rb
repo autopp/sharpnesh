@@ -91,6 +91,7 @@ class Sharpnesh::Parser
     TK_BXOR2 = :'^^'
     TK_COMMA2 = :',,'
     TK_NAME = :name
+    TK_ASSIGN_HEAD = :assign_head
     TK_DECIAML = :decimal
     TK_DOLLAR_LPAREN = :'$('
     TK_BQUOTE = :`

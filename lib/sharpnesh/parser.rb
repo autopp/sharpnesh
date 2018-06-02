@@ -47,15 +47,9 @@ module Sharpnesh
     def parse_simple_command(lexer)
       # parse assignments
       assigns = []
-      while (name = lexer.next(TK_NAME))
-        op = lexer.accept(/[=]/, TK_ASSIGN, allow_blank: false)
-        if !op
-          lexer.back
-          break
-        else
-          value = parse_word(lexer)
-          assigns << Node.new(:assign, name: name.body, value: value)
-        end
+      while (assign = lexer.accept(/[a-zA-Z0-9][a-zA-Z0-9_]*=/, TK_ASSIGN_HEAD))
+        value = parse_word(lexer)
+        assigns << Node.new(:assign, name: assign.body[0...-1], value: value)
       end
 
       # parse command body
@@ -66,8 +60,8 @@ module Sharpnesh
     end
 
     def parse_word(lexer)
-      if (name = lexer.next(TK_NAME))
-        return Node.new(:name, body: name.body)
+      if (str = lexer.next(TK_STR))
+        return Node.new(:str, body: str.body)
       end
       raise ParseError, "unexpected token: #{lexer.peek}"
     end

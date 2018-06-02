@@ -37,7 +37,16 @@ class Sharpnesh::Parser
     end
 
     def accept(pattern, type, allow_blank: true)
-      raise "cannot call `accept` when buffered (head of buffer is `#{@tokens[@next].body}`)" if @next < @tokens.size
+      if @next + 1 < @tokens.size
+        raise "cannot call `accept` when 2 or more tokens are buffered (head of buffer is `#{@tokens[@next].body}`)"
+      end
+
+      if @next + 1 == @tokens.size
+        head = @tokens.pop
+        @col -= head.body.length
+        @scanner.pos -= head.body.bytesize
+      end
+
       rollback_pos = @scanner.pos
       blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
       if !(body = @scanner.scan(pattern))
@@ -78,7 +87,7 @@ class Sharpnesh::Parser
     private
 
     DEFAULT_RULES = [
-      { pattern: /[a-zA-Z_]\w*/, method: :on_token, opt: TK_NAME },
+      { pattern: /([^$|&;()<> \t\n]|\\[$|&;()<> \t"'])+/, method: :on_token, opt: TK_STR },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
