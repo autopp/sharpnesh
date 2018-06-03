@@ -42,9 +42,9 @@ class Sharpnesh::Parser
       end
 
       if @next + 1 == @tokens.size
-        head = @tokens.pop
-        @col -= head.body.length
-        @scanner.pos -= head.body.bytesize
+        last_body = @tokens.pop.body
+        @col -= last_body.length
+        @scanner.pos -= last_body.bytesize
       end
 
       rollback_pos = @scanner.pos
