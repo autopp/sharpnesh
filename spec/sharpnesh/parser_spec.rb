@@ -94,6 +94,23 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with a assign including `=`' do
+      let(:src) { 'a=b=x foo' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [n(:assign, name: 'a', value: n(:name, body: 'b=x'))],
+                               body: [n(:name, body: 'foo')])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with string' do
       let(:src) { 'foo sample-arg.txt' }
       let(:root_list) do
