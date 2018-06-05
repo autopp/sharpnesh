@@ -15,4 +15,12 @@ describe Sharpnesh::Node do
 
     it { is_expected.not_to respond_to(:z) }
   end
+
+  describe '#inspect' do
+    subject { described_class.new(:foo, x: 42, y: 'bar').inspect }
+
+    it 'returns sexpr format string' do
+      expect(subject).to eq('(foo (x 42) (y "bar"))')
+    end
+  end
 end

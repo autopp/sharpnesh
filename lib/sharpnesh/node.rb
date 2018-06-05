@@ -19,5 +19,13 @@ module Sharpnesh
     def ==(other)
       other.is_a?(Node) && children == other.children
     end
+
+    def inspect
+      str = "(#{type}"
+      @children.each do |k, v|
+        str << " (#{k} #{v.inspect})"
+      end
+      str << ')'
+    end
   end
 end
