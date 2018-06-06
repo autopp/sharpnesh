@@ -111,6 +111,23 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with a empty assign' do
+      let(:src) { 'a= foo' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [n(:assign, name: 'a', value: n(:name, body: nil))],
+                               body: [n(:name, body: 'foo')])),
+            terminal: nil)
+        ]
+      end
+
+      it { pending; is_expected.to eq(expected) }
+    end
+
     context 'with string' do
       let(:src) { 'foo sample-arg.txt' }
       let(:root_list) do
