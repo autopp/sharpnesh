@@ -119,7 +119,7 @@ describe Sharpnesh::Parser do
             body: n(:pipeline,
                     excl: nil,
                     command: n(:simple_command,
-                               assigns: [n(:assign, name: 'a', value: n(:name, body: nil))],
+                               assigns: [n(:assign, name: 'a', value: nil)],
                                body: [n(:name, body: 'foo')])),
             terminal: nil)
         ]
