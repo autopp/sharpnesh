@@ -14,7 +14,7 @@ describe Sharpnesh::Parser do
           n(:pipelines,
             body: n(:pipeline,
                     excl: nil,
-                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'foo')])),
             terminal: nil)
         ]
       end
@@ -29,7 +29,7 @@ describe Sharpnesh::Parser do
           n(:pipelines,
             body: n(:pipeline,
                     excl: nil,
-                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo'), n(:name, body: 'bar')])),
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'foo'), n(:str, body: 'bar')])),
             terminal: nil)
         ]
       end
@@ -44,12 +44,12 @@ describe Sharpnesh::Parser do
           n(:pipelines,
             body: n(:pipeline,
                     excl: nil,
-                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'foo')])),
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'foo')])),
             terminal: ';'),
           n(:pipelines,
             body: n(:pipeline,
                     excl: nil,
-                    command: n(:simple_command, assigns: [], body: [n(:name, body: 'bar')])),
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'bar')])),
             terminal: nil)
         ]
       end
@@ -65,8 +65,8 @@ describe Sharpnesh::Parser do
             body: n(:pipeline,
                     excl: nil,
                     command: n(:simple_command,
-                               assigns: [n(:assign, name: 'a', value: n(:name, body: 'x'))],
-                               body: [n(:name, body: 'foo')])),
+                               assigns: [n(:assign, name: 'a', value: n(:str, body: 'x'))],
+                               body: [n(:str, body: 'foo')])),
             terminal: nil)
         ]
       end
@@ -83,10 +83,10 @@ describe Sharpnesh::Parser do
                     excl: nil,
                     command: n(:simple_command,
                                assigns: [
-                                 n(:assign, name: 'a', value: n(:name, body: 'x')),
-                                 n(:assign, name: 'b', value: n(:name, body: 'y'))
+                                 n(:assign, name: 'a', value: n(:str, body: 'x')),
+                                 n(:assign, name: 'b', value: n(:str, body: 'y'))
                                ],
-                               body: [n(:name, body: 'foo')])),
+                               body: [n(:str, body: 'foo')])),
             terminal: nil)
         ]
       end
@@ -102,8 +102,8 @@ describe Sharpnesh::Parser do
             body: n(:pipeline,
                     excl: nil,
                     command: n(:simple_command,
-                               assigns: [n(:assign, name: 'a', value: n(:name, body: 'b=x'))],
-                               body: [n(:name, body: 'foo')])),
+                               assigns: [n(:assign, name: 'a', value: n(:str, body: 'b=x'))],
+                               body: [n(:str, body: 'foo')])),
             terminal: nil)
         ]
       end
@@ -120,7 +120,7 @@ describe Sharpnesh::Parser do
                     excl: nil,
                     command: n(:simple_command,
                                assigns: [n(:assign, name: 'a', value: nil)],
-                               body: [n(:name, body: 'foo')])),
+                               body: [n(:str, body: 'foo')])),
             terminal: nil)
         ]
       end
@@ -137,7 +137,7 @@ describe Sharpnesh::Parser do
                     excl: nil,
                     command: n(:simple_command,
                                assigns: [],
-                               body: [n(:name, body: 'foo'), n(:str, body: 'sample-arg.txt')])),
+                               body: [n(:str, body: 'foo'), n(:str, body: 'sample-arg.txt')])),
             terminal: nil)
         ]
       end
