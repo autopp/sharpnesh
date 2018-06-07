@@ -17,7 +17,7 @@ module Sharpnesh
     end
 
     def ==(other)
-      other.is_a?(Node) && children == other.children
+      other.is_a?(Node) && type == other.type && children == other.children
     end
 
     def inspect
