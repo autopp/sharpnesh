@@ -144,5 +144,22 @@ describe Sharpnesh::Parser do
 
       it { is_expected.to eq(expected) }
     end
+
+    context 'with a single quoted string' do
+      let(:src) { "foo 'bar baz'" }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [n(:str, body: 'foo'), n(:sstr, body: 'bar baz')])),
+            terminal: nil)
+        ]
+      end
+
+      it { pending; is_expected.to eq(expected) }
+    end
   end
 end
