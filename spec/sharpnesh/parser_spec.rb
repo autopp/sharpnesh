@@ -57,7 +57,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with a assign' do
+    context 'with a assignment' do
       let(:src) { 'a=x foo' }
       let(:root_list) do
         [
@@ -74,7 +74,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with two assigns' do
+    context 'with two assignments' do
       let(:src) { 'a=x b=y foo' }
       let(:root_list) do
         [
@@ -94,7 +94,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with a assign including `=`' do
+    context 'with a assignment including `=`' do
       let(:src) { 'a=b=x foo' }
       let(:root_list) do
         [
@@ -111,7 +111,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with a empty assign' do
+    context 'with a empty assignment' do
       let(:src) { 'a= foo' }
       let(:root_list) do
         [
