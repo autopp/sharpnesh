@@ -48,7 +48,8 @@ module Sharpnesh
       # parse assignments
       assigns = []
       while (assign = lexer.accept(/[a-zA-Z0-9][a-zA-Z0-9_]*=/, TK_ASSIGN_HEAD))
-        value = parse_word(lexer)
+        head = lexer.peek
+        value = head.blank.empty? && !CONTROL_OPERATORS.include?(head.type) ? parse_word(lexer) : nil
         assigns << Node.new(:assign, name: assign.body[0...-1], value: value)
       end
 

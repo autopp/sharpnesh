@@ -125,7 +125,7 @@ describe Sharpnesh::Parser do
         ]
       end
 
-      it { pending; is_expected.to eq(expected) }
+      it { is_expected.to eq(expected) }
     end
 
     context 'with string' do
