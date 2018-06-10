@@ -62,15 +62,14 @@ module Sharpnesh
 
     def parse_word(lexer)
       if (str = lexer.next(TK_STR))
-        return Node.new(:str, body: str.body)
+        Node.new(:str, body: str.body)
+      elsif (sstr = lexer.next(TK_SQUOTE))
+        Node.new(:sstr, body: sstr.body[1...-1])
+      elsif (dollar_var = lexer.next(TK_DOLLAR_VAR))
+        Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
+      else
+        raise ParseError, "unexpected token: #{lexer.peek}"
       end
-      if (sstr = lexer.next(TK_SQUOTE))
-        return Node.new(:sstr, body: sstr.body[1...-1])
-      end
-      if (dollar_var = lexer.next(TK_DOLLAR_VAR))
-        return Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
-      end
-      raise ParseError, "unexpected token: #{lexer.peek}"
     end
 
     class ParseError < StandardError
