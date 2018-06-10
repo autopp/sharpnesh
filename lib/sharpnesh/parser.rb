@@ -67,6 +67,9 @@ module Sharpnesh
       if (sstr = lexer.next(TK_SQUOTE))
         return Node.new(:sstr, body: sstr.body[1...-1])
       end
+      if (dollar_var = lexer.next(TK_DOLLAR_VAR))
+        return Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
+      end
       raise ParseError, "unexpected token: #{lexer.peek}"
     end
 

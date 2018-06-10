@@ -75,6 +75,7 @@ class Sharpnesh::Parser
     TK_DQUOTE = :'"'
     TK_DOLLAR_SQUOTE = :"$'"
     TK_DOLLAR_DQUOTE = :'$"'
+    TK_DOLLAR_VAR = :dollar_var
     TK_DOLLAR_LBRACE = :'${'
     TK_AT = :'@'
     TK_ASTALISK = :TK_MUL
