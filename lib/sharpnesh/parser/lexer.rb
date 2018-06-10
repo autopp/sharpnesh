@@ -124,6 +124,10 @@ class Sharpnesh::Parser
         @start_line = start_line
         @start_col = start_col
       end
+
+      def to_s
+        type.to_s
+      end
     end
   end
 end
