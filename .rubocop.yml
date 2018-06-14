@@ -32,6 +32,9 @@ Style/NegatedIf:
 Style/NegatedWhile:
   Enabled: false
 
+Style/DoubleNegation:
+  Enabled: false
+
 Metrics/ParameterLists:
   Exclude:
     - spec/**/*
