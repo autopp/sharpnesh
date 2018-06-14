@@ -8,6 +8,8 @@ class Sharpnesh::Parser
     TK_RPAREN2 = :'))'
     TK_LBRACKET2 = :'[['
     TK_RBRACKET2 = :']]'
+    TK_LBRACE = :'{'
+    TK_RBRACE = :'}'
     TK_FOR = :for
     TK_IN = :in
     TK_SEMICOLON = :';'
@@ -92,6 +94,7 @@ class Sharpnesh::Parser
     TK_BXOR2 = :'^^'
     TK_COMMA2 = :',,'
     TK_NAME = :name
+    TK_VAR = :var
     TK_ASSIGN_HEAD = :assign_head
     TK_DECIAML = :decimal
     TK_DOLLAR_LPAREN = :'$('

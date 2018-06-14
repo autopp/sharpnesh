@@ -67,9 +67,21 @@ module Sharpnesh
         Node.new(:sstr, body: sstr.body[1...-1])
       elsif (dollar_var = lexer.next(TK_DOLLAR_VAR))
         Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
+      elsif lexer.next(TK_DOLLAR_LBRACE)
+        parse_expansion(lexer)
       else
         raise ParseError, "unexpected token: #{lexer.peek}"
       end
+    end
+
+    def parse_expansion(lexer)
+      # check ref `!`
+      ref = !!lexer.accept(/!/, TK_NOT, allow_blank: false)
+      if !(param = lexer.accept(/([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, TK_VAR, allow_blank: false))
+        raise ParseError, 'expect parameter'
+      end
+      raise ParseError, 'expect `}`' if !lexer.accept(/}/, TK_RBRACE, allow_blank: false)
+      Node.new(:param_ex, ref: ref, body: param.body)
     end
 
     class ParseError < StandardError

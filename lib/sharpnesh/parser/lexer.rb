@@ -82,6 +82,7 @@ class Sharpnesh::Parser
       { pattern: /([^$|&;()<> \t\n"']|\\[$|&;()<> \t"'])+/, method: :on_token, opt: TK_STR },
       { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
       { pattern: /\$([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_DOLLAR_VAR },
+      { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
