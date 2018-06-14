@@ -1,6 +1,6 @@
 class Sharpnesh::Parser
   # Namespace for constants about of token type
-  module TokenType
+  module TokenType # rubocop:disable Metrics/ModuleLength
     TK_ASSIGN = :'='
     TK_LPAREN = :'('
     TK_RPAREN = :')'
