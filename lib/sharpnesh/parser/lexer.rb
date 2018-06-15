@@ -31,7 +31,7 @@ class Sharpnesh::Parser
       token = if @next < @tokens.size
         @tokens[@next]
       else
-        tokenize
+        tokenize(allow_blank: allow_blank)
       end
       (expected.empty? || expected.include?(token.type)) && (allow_blank || token.blank.empty?) ? token : nil
     end
@@ -86,8 +86,8 @@ class Sharpnesh::Parser
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
-    def tokenize
-      blank = @scanner.scan(/[ \t]*/)
+    def tokenize(allow_blank:)
+      blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
       @col += blank.length
       return Token.new(TK_EOS, blank, nil, @line, @col) if @scanner.eos?
 
