@@ -5,9 +5,17 @@ module Sharpnesh
     require 'sharpnesh/parser/token_type'
     include TokenType
 
+    DEFAULT_RULES = [
+      { pattern: /([^$|&;()<> \t\n"']|\\[$|&;()<> \t"'])+/, method: :on_token, opt: TK_STR },
+      { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
+      { pattern: /\$([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_DOLLAR_VAR },
+      { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
+      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
+    ].freeze
+
     def parse(io, name)
       lexer = Lexer.new(io, name)
-      lexer.use_rules(Lexer::DEFAULT_RULES) do
+      lexer.use_rules(DEFAULT_RULES) do
         Node.new(:root, list: parse_list(lexer, TK_EOS))
       end
     end
