@@ -13,6 +13,11 @@ module Sharpnesh
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
+    EXPANSION_RULES = [
+      { pattern: /([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_VAR },
+      { pattern: /}/, method: :on_token, opt: TK_RBRACE }
+    ].freeze
+
     def parse(io, name)
       lexer = Lexer.new(io, name)
       lexer.use_rules(DEFAULT_RULES) do
@@ -83,13 +88,15 @@ module Sharpnesh
     end
 
     def parse_expansion(lexer)
-      # check ref `!`
-      ref = !!lexer.accept(/!/, TK_NOT, allow_blank: false)
-      if !(param = lexer.accept(/([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, TK_VAR, allow_blank: false))
-        raise ParseError, 'expect parameter'
+      lexer.use_rules(EXPANSION_RULES) do
+        # check ref `!`
+        ref = !!lexer.accept(/!/, TK_NOT, allow_blank: false)
+        if !(param = lexer.next(TK_VAR, allow_blank: false))
+          raise ParseError, 'expect parameter'
+        end
+        raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE, allow_blank: false)
+        Node.new(:param_ex, ref: ref, body: param.body)
       end
-      raise ParseError, 'expect `}`' if !lexer.accept(/}/, TK_RBRACE, allow_blank: false)
-      Node.new(:param_ex, ref: ref, body: param.body)
     end
 
     class ParseError < StandardError
