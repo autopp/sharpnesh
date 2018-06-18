@@ -21,7 +21,7 @@ class Sharpnesh::Parser
     def next(*expected, allow_blank: true)
       return if !(token = peek(*expected, allow_blank: allow_blank))
       @next += 1
-      token
+      block_given? ? yield(token) : token
     end
 
     # return next token (not steped)
@@ -33,7 +33,8 @@ class Sharpnesh::Parser
       else
         tokenize(allow_blank: allow_blank)
       end
-      (expected.empty? || expected.include?(token.type)) && (allow_blank || token.blank.empty?) ? token : nil
+      return if !expected.empty? && !expected.include?(token.type) || !allow_blank && !token.blank.empty?
+      block_given? ? yield(token) : token
     end
 
     def accept(pattern, type, allow_blank: true)
