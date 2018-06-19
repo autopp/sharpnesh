@@ -219,7 +219,7 @@ describe Sharpnesh::Parser do
     end
 
     context 'with array expansions' do
-      let(:src) { '$foo[*] ${foo[@]}' }
+      let(:src) { '${foo[*]} ${foo[@]}' }
       let(:root_list) do
         [
           n(:pipelines,
@@ -232,7 +232,7 @@ describe Sharpnesh::Parser do
         ]
       end
 
-      it { pending; is_expected.to eq(expected) }
+      it { is_expected.to eq(expected) }
     end
 
     context 'with a single quoted string' do

@@ -15,6 +15,8 @@ module Sharpnesh
 
     EXPANSION_RULES = [
       { pattern: /([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_VAR },
+      { pattern: /\[@\]/, method: :on_token, opt: TK_BRACKET_AT },
+      { pattern: /\[\*\]/, method: :on_token, opt: TK_BRACKET_ASTALISK },
       { pattern: /}/, method: :on_token, opt: TK_RBRACE }
     ].freeze
 
@@ -94,8 +96,15 @@ module Sharpnesh
         if !(param = lexer.next(TK_VAR, allow_blank: false))
           raise ParseError, 'expect parameter'
         end
+
+        # array expansion
+        node = if (array_ex = lexer.next(TK_BRACKET_AT, TK_BRACKET_ASTALISK, allow_blank: false))
+          Node.new(:array_ex, array: param.body, mode: array_ex.body[1])
+        else
+          Node.new(:param_ex, ref: ref, body: param.body)
+        end
         raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE, allow_blank: false)
-        Node.new(:param_ex, ref: ref, body: param.body)
+        node
       end
     end
 
