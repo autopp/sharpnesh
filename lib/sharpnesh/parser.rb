@@ -99,7 +99,8 @@ module Sharpnesh
 
         # array expansion
         node = if (array_ex = lexer.next(TK_BRACKET_AT, TK_BRACKET_ASTALISK, allow_blank: false))
-          Node.new(:array_ex, array: param.body, mode: array_ex.body[1])
+          type = ref ? :array_keys : :array_ex
+          Node.new(type, array: param.body, mode: array_ex.body[1])
         else
           Node.new(:param_ex, ref: ref, body: param.body)
         end
