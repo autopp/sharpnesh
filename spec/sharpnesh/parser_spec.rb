@@ -254,7 +254,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with array keys expansions' do
+    context 'with prefix expansions' do
       let(:src) { '${!foo*} ${!foo@}' }
       let(:root_list) do
         [
