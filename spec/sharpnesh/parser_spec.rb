@@ -264,15 +264,15 @@ describe Sharpnesh::Parser do
                     command: n(:simple_command,
                                assigns: [],
                                body: [
-                                 n(:match_prefix, prefix: 'foo', mode: '*'), n(:match_prefix, prefix: 'foo', mode: '@')
+                                 n(:prefix_ex, prefix: 'foo', mode: '*'), n(:prefix_ex, prefix: 'foo', mode: '@')
                                ])),
             terminal: nil)
         ]
       end
 
-      it { pending; is_expected.to eq(expected) }
+      it { is_expected.to eq(expected) }
     end
-    
+
     context 'with a single quoted string' do
       let(:src) { "foo 'bar baz'" }
       let(:root_list) do

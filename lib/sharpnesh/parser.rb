@@ -97,11 +97,15 @@ module Sharpnesh
           raise ParseError, 'expect parameter'
         end
 
-        # array expansion
         node = if (array_ex = lexer.next(TK_BRACKET_AT, TK_BRACKET_ASTALISK, allow_blank: false))
+          # array expansion
           type = ref ? :array_keys : :array_ex
           Node.new(type, array: param.body, mode: array_ex.body[1])
+        elsif (prefix_match_mode = lexer.accept(/[@*]/, nil, allow_blank: false))
+          raise ParseError, 'prefix matching requires `!`' if !ref
+          Node.new(:prefix_ex, prefix: param.body, mode: prefix_match_mode.body)
         else
+          # normal expansion
           Node.new(:param_ex, ref: ref, body: param.body)
         end
         raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE, allow_blank: false)
