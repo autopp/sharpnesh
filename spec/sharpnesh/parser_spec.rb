@@ -244,8 +244,9 @@ describe Sharpnesh::Parser do
                     excl: nil,
                     command: n(:simple_command,
                                assigns: [],
-                               body: [n(
-                                 :array_keys, array: 'foo', mode: '*'), n(:array_keys, array: 'foo', mode: '@')])),
+                               body: [
+                                 n(:array_keys, array: 'foo', mode: '*'), n(:array_keys, array: 'foo', mode: '@')
+                               ])),
             terminal: nil)
         ]
       end
