@@ -91,6 +91,9 @@ module Sharpnesh
 
     def parse_expansion(lexer)
       lexer.use_rules(EXPANSION_RULES) do
+        # check length `#`
+        len = !!lexer.accept(/#/, TK_SHARP, allow_blank: false)
+
         # check ref `!`
         ref = !!lexer.accept(/!/, TK_NOT, allow_blank: false)
         if !(param = lexer.next(TK_VAR, allow_blank: false))
@@ -105,8 +108,9 @@ module Sharpnesh
           raise ParseError, 'prefix matching requires `!`' if !ref
           Node.new(:prefix_ex, prefix: param.body, mode: prefix_match_mode.body)
         else
-          # normal expansion
-          Node.new(:param_ex, ref: ref, body: param.body)
+          type = len ? :param_len : :param_ex
+          # normal expansion or parameter length
+          Node.new(type, ref: ref, body: param.body)
         end
         raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE, allow_blank: false)
         node

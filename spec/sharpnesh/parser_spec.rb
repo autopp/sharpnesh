@@ -254,6 +254,23 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with parameter length expansion' do
+      let(:src) { '${#foo} ${#!bar}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [n(:param_len, ref: false, body: 'foo'), n(:param_len, ref: true, body: 'bar')])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with prefix expansions' do
       let(:src) { '${!foo*} ${!foo@}' }
       let(:root_list) do
