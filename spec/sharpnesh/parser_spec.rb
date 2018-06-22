@@ -290,6 +290,29 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with parameter transfomations' do
+      let(:src) { '${foo@Q} ${foo@E} ${foo@P} ${!foo@A} ${!foo@a}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:param_trans, ref: false, body: 'foo', op: 'Q'),
+                                 n(:param_trans, ref: false, body: 'foo', op: 'E'),
+                                 n(:param_trans, ref: false, body: 'foo', op: 'P'),
+                                 n(:param_trans, ref: true, body: 'foo', op: 'A'),
+                                 n(:param_trans, ref: true, body: 'foo', op: 'a')
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with a single quoted string' do
       let(:src) { "foo 'bar baz'" }
       let(:root_list) do

@@ -104,9 +104,17 @@ module Sharpnesh
           # array expansion
           type = ref ? :array_keys : :array_ex
           Node.new(type, array: param.body, mode: array_ex.body[1])
-        elsif (prefix_match_mode = lexer.accept(/[@*]/, nil, allow_blank: false))
+        elsif lexer.accept(/[@]/, nil, allow_blank: false)
+          op = lexer.accept(/[QPEAa]/, nil, allow_blank: false)
+          if op
+            Node.new(:param_trans, ref: ref, body: param.body, op: op.body)
+          else
+            raise ParseError, 'prefix matching requires `!`' if !ref
+            Node.new(:prefix_ex, prefix: param.body, mode: '@')
+          end
+        elsif lexer.accept(/[*]/, nil, allow_blank: nil)
           raise ParseError, 'prefix matching requires `!`' if !ref
-          Node.new(:prefix_ex, prefix: param.body, mode: prefix_match_mode.body)
+          Node.new(:prefix_ex, prefix: param.body, mode: '*')
         else
           type = len ? :param_len : :param_ex
           # normal expansion or parameter length
