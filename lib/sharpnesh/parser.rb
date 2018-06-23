@@ -1,7 +1,7 @@
 module Sharpnesh
   # Parser provides features of parsing a bash script
   #
-  class Parser
+  class Parser # rubocop:disable Metrics/ClassLength
     require 'sharpnesh/parser/token_type'
     include TokenType
 
@@ -89,7 +89,7 @@ module Sharpnesh
       end
     end
 
-    def parse_expansion(lexer)
+    def parse_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
       lexer.use_rules(EXPANSION_RULES) do
         # check length `#`
         len = !!lexer.accept(/#/, TK_SHARP, allow_blank: false)
