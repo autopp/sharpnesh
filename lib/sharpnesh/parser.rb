@@ -22,7 +22,7 @@ module Sharpnesh
 
     def parse(io, name)
       lexer = Lexer.new(io, name)
-      lexer.use_rules(DEFAULT_RULES) do
+      lexer.use_rules(DEFAULT_RULES, allow_blank: true) do
         Node.new(:root, list: parse_list(lexer, TK_EOS))
       end
     end
@@ -90,7 +90,7 @@ module Sharpnesh
     end
 
     def parse_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
-      lexer.use_rules(EXPANSION_RULES) do
+      lexer.use_rules(EXPANSION_RULES, allow_blank: false) do
         # check length `#`
         len = !!lexer.accept(/#/, TK_SHARP, allow_blank: false)
 

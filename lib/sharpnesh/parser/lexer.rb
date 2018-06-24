@@ -18,7 +18,7 @@ class Sharpnesh::Parser
     # return next token
     #
     # @return [Token]
-    def next(*expected, allow_blank: true)
+    def next(*expected, allow_blank: @allow_blank)
       return if !(token = peek(*expected, allow_blank: allow_blank))
       @next += 1
       block_given? ? yield(token) : token
@@ -27,7 +27,7 @@ class Sharpnesh::Parser
     # return next token (not steped)
     #
     # @return [Token]
-    def peek(*expected, allow_blank: true)
+    def peek(*expected, allow_blank: @allow_blank)
       token = if @next < @tokens.size
         @tokens[@next]
       else
@@ -37,7 +37,7 @@ class Sharpnesh::Parser
       block_given? ? yield(token) : token
     end
 
-    def accept(pattern, type, allow_blank: true)
+    def accept(pattern, type, allow_blank: @allow_blank)
       reset_buffer
 
       rollback_pos = @scanner.pos
@@ -68,11 +68,14 @@ class Sharpnesh::Parser
       @next > 0 && @tokens[@next - 1].type == TK_EOS
     end
 
-    def use_rules(rules)
+    def use_rules(rules, allow_blank: @allow_blank)
+      before_allow_blank = @allow_blank
+      @allow_blank = allow_blank
       @rules_stack.push(rules)
       begin
         yield
       ensure
+        @allow_blank = before_allow_blank
         @rules_stack.pop
       end
     end
