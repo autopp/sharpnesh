@@ -92,27 +92,27 @@ module Sharpnesh
     def parse_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
       lexer.use_rules(EXPANSION_RULES, allow_blank: false) do
         # check length `#`
-        len = !!lexer.accept(/#/, TK_SHARP, allow_blank: false)
+        len = !!lexer.accept(/#/, TK_SHARP)
 
         # check ref `!`
-        ref = !!lexer.accept(/!/, TK_NOT, allow_blank: false)
-        if !(param = lexer.next(TK_VAR, allow_blank: false))
+        ref = !!lexer.accept(/!/, TK_NOT)
+        if !(param = lexer.next(TK_VAR))
           raise ParseError, 'expect parameter'
         end
 
-        node = if (array_ex = lexer.next(TK_BRACKET_AT, TK_BRACKET_ASTALISK, allow_blank: false))
+        node = if (array_ex = lexer.next(TK_BRACKET_AT, TK_BRACKET_ASTALISK))
           # array expansion
           type = ref ? :array_keys : :array_ex
           Node.new(type, array: param.body, mode: array_ex.body[1])
-        elsif lexer.accept(/[@]/, nil, allow_blank: false)
-          op = lexer.accept(/[QPEAa]/, nil, allow_blank: false)
+        elsif lexer.accept(/[@]/, nil)
+          op = lexer.accept(/[QPEAa]/, nil)
           if op
             Node.new(:param_trans, ref: ref, body: param.body, op: op.body)
           else
             raise ParseError, 'prefix matching requires `!`' if !ref
             Node.new(:prefix_ex, prefix: param.body, mode: '@')
           end
-        elsif lexer.accept(/[*]/, nil, allow_blank: nil)
+        elsif lexer.accept(/[*]/, nil)
           raise ParseError, 'prefix matching requires `!`' if !ref
           Node.new(:prefix_ex, prefix: param.body, mode: '*')
         else
@@ -120,7 +120,7 @@ module Sharpnesh
           # normal expansion or parameter length
           Node.new(type, ref: ref, body: param.body)
         end
-        raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE, allow_blank: false)
+        raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE)
         node
       end
     end
