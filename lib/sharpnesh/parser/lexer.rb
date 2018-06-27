@@ -28,12 +28,8 @@ class Sharpnesh::Parser
     #
     # @return [Token]
     def peek(*expected, allow_blank: @allow_blank)
-      token = if @next < @tokens.size
-        @tokens[@next]
-      else
-        tokenize(allow_blank: allow_blank)
-      end
-      return if !expected.empty? && !expected.include?(token.type) || !allow_blank && !token.blank.empty?
+      token = tokenize(allow_blank: allow_blank)
+      return if !token || !expected.empty? && !expected.include?(token.type) || !allow_blank && !token.blank.empty?
       block_given? ? yield(token) : token
     end
 
@@ -83,6 +79,7 @@ class Sharpnesh::Parser
     private
 
     def tokenize(allow_blank:)
+      return @tokens[@next] if @next < @tokens.size
       blank = allow_blank ? @scanner.scan(/[ \t]*/) : ''
       @col += blank.length
       return Token.new(TK_EOS, blank, nil, @line, @col) if @scanner.eos?
@@ -92,7 +89,7 @@ class Sharpnesh::Parser
         return send(method, matched, blank, opt) if matched
       end
 
-      raise ParseError, "cannot recognize charactor `#{@scanner.rest[0]}`"
+      nil
     end
 
     def on_token(body, blank, type)
