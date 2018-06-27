@@ -90,7 +90,7 @@ module Sharpnesh
     end
 
     def parse_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
-      lexer.use_rules(EXPANSION_RULES, allow_blank: false) do
+      lexer.use_rules(EXPANSION_RULES, allow_blank: false) do # rubocop:disable Metrics/BlockLength
         # check length `#`
         len = !!lexer.accept(/#/, TK_SHARP)
 
@@ -115,6 +115,10 @@ module Sharpnesh
         elsif lexer.accept(/[*]/, nil)
           raise ParseError, 'prefix matching requires `!`' if !ref
           Node.new(:prefix_ex, prefix: param.body, mode: '*')
+        elsif lexer.accept(/\[/, nil)
+          subscript = parse_arith(lexer)
+          raise ParseError, 'expect `]`' if !lexer.accept(/\]/, nil, allow_blank: true)
+          Node.new(:array_access, body: param.body, subscript: subscript)
         else
           type = len ? :param_len : :param_ex
           # normal expansion or parameter length
@@ -122,6 +126,17 @@ module Sharpnesh
         end
         raise ParseError, 'expect `}`' if !lexer.next(TK_RBRACE)
         node
+      end
+    end
+
+    ARITH_RULES = [
+      { pattern: /\d+/, method: :on_token, opt: TK_NUMBER }
+    ].freeze
+    def parse_arith(lexer)
+      lexer.use_rules(ARITH_RULES, allow_blank: true) do
+        # TODO: parsing full syntax
+        raise ParseError, 'expect number' if !(token = lexer.next(TK_NUMBER))
+        Node.new(:number, value: token.body)
       end
     end
 
