@@ -255,6 +255,26 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with parameter substitutions' do
+      let(:src) { '${a:-a} ${a:=\'a\'} ${a:?${x}} ${a:+}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:param_subst, body: 'a', op: ':-', value: n(:str, body: 'a')),
+                                 n(:param_subst, body: 'a', op: ':=', value: n(:sstr, body: 'a')),
+                                 n(:param_subst, body: 'a', op: ':?', value: n(:param_ex, ref: false, body: 'x')),
+                                 n(:param_subst, body: 'a', op: ':+', value: n(:empty))
+                               ])),
+            terminal: nil)
+        ]
+      end
+    end
+
     context 'with array keys expansions' do
       let(:src) { '${!foo[*]} ${!foo[@]}' }
       let(:root_list) do
