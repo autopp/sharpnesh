@@ -65,6 +65,7 @@ class Sharpnesh::Parser
     end
 
     def use_rules(rules, allow_blank: @allow_blank)
+      reset_buffer
       before_allow_blank = @allow_blank
       @allow_blank = allow_blank
       @rules_stack.push(rules)
