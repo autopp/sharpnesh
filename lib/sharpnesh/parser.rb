@@ -104,6 +104,15 @@ module Sharpnesh
           # array expansion
           type = ref ? :array_keys : :array_ex
           Node.new(type, array: param.body, mode: array_ex.body[1])
+        elsif (op = lexer.accept(/:[-=?+]/, nil))
+          value = if lexer.peek(TK_RBRACE)
+            Node.new(:empty)
+          else
+            lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
+              parse_word(lexer)
+            end
+          end
+          Node.new(:param_subst, ref: ref, body: param.body, op: op.body, value: value)
         elsif lexer.accept(/[@]/, nil)
           op = lexer.accept(/[QPEAa]/, nil)
           if op
@@ -138,6 +147,16 @@ module Sharpnesh
         raise ParseError, 'expect number' if !(token = lexer.next(TK_NUMBER))
         Node.new(:number, value: token.body)
       end
+    end
+
+    def gen_word_rules(sep)
+      [
+        { pattern: /([^$|&;()<> \t\n"'#{sep}]|\\[$|&;()<> \t"'#{sep}])+/, method: :on_token, opt: TK_STR },
+        { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
+        { pattern: /\$([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_DOLLAR_VAR },
+        { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
+        { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
+      ]
     end
 
     class ParseError < StandardError
