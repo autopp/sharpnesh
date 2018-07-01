@@ -281,6 +281,25 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with substring expapnsions' do
+      let(:src) { '${a:0}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:substr, ref: false, body: 'a', offset: n(:number, value: '0'))
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { pending; is_expected.to eq(expected) }
+    end
+
     context 'with array keys expansions' do
       let(:src) { '${!foo[*]} ${!foo[@]}' }
       let(:root_list) do
