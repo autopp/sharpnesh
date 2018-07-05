@@ -49,6 +49,12 @@ class Sharpnesh::Parser
       token
     end
 
+    def skip_blank
+      return if @tokens.size > @next
+      @scanner.scan(/[ \t]*/)
+      nil
+    end
+
     # back to previous token
     #
     def back

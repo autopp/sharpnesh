@@ -282,7 +282,7 @@ describe Sharpnesh::Parser do
     end
 
     context 'with substring expapnsions' do
-      let(:src) { '${a:0} ${!a:0:1}' }
+      let(:src) { '${a:0} ${!a:0:1} ${a: 0 } ${!a: 0 : 1 }' }
       let(:root_list) do
         [
           n(:pipelines,
@@ -291,6 +291,10 @@ describe Sharpnesh::Parser do
                     command: n(:simple_command,
                                assigns: [],
                                body: [
+                                 n(:substr, ref: false, body: 'a',
+                                            offset: n(:number, value: '0'), length: n(:empty)),
+                                 n(:substr, ref: true, body: 'a',
+                                            offset: n(:number, value: '0'), length: n(:number, value: '1')),
                                  n(:substr, ref: false, body: 'a',
                                             offset: n(:number, value: '0'), length: n(:empty)),
                                  n(:substr, ref: true, body: 'a',

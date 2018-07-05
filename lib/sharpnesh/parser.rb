@@ -115,7 +115,8 @@ module Sharpnesh
           Node.new(:param_subst, ref: ref, body: param.body, op: op.body, value: value)
         elsif lexer.accept(/:/, nil)
           offset = parse_arith(lexer)
-          length = lexer.accept(/:/, nil) ? parse_arith(lexer) : Node.new(:empty)
+          length = lexer.accept(/:/, nil, allow_blank: true) ? parse_arith(lexer) : Node.new(:empty)
+          lexer.skip_blank
           Node.new(:substr, ref: ref, body: param.body, offset: offset, length: length)
         elsif lexer.accept(/[@]/, nil)
           op = lexer.accept(/[QPEAa]/, nil)
