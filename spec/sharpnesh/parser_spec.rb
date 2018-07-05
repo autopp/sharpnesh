@@ -343,6 +343,25 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with remove pattern' do
+      let(:src) { '${a#b}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:pattern_rm, ref: false, body: 'a', mode: '#', pattern: n(:str, body: 'b'))
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with prefix expansions' do
       let(:src) { '${!foo*} ${!foo@}' }
       let(:root_list) do
