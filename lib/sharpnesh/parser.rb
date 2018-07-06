@@ -118,6 +118,11 @@ module Sharpnesh
           length = lexer.accept(/:/, nil, allow_blank: true) ? parse_arith(lexer) : Node.new(:empty)
           lexer.skip_blank
           Node.new(:substr, ref: ref, body: param.body, offset: offset, length: length)
+        elsif (mode = lexer.accept(/#/, nil))
+          pattern = lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
+            parse_word(lexer)
+          end
+          Node.new(:pattern_rm, ref: ref, body: param.body, mode: mode.body, pattern: pattern)
         elsif lexer.accept(/[@]/, nil)
           op = lexer.accept(/[QPEAa]/, nil)
           if op
