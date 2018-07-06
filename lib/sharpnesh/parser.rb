@@ -118,7 +118,7 @@ module Sharpnesh
           length = lexer.accept(/:/, nil, allow_blank: true) ? parse_arith(lexer) : Node.new(:empty)
           lexer.skip_blank
           Node.new(:substr, ref: ref, body: param.body, offset: offset, length: length)
-        elsif (mode = lexer.accept(/\#{1,2}/, nil))
+        elsif (mode = lexer.accept(/\#{1,2}|%/, nil))
           pattern = lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
             parse_word(lexer)
           end

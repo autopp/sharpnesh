@@ -344,7 +344,7 @@ describe Sharpnesh::Parser do
     end
 
     context 'with remove pattern' do
-      let(:src) { '${a#b} ${a##\'b\'}' }
+      let(:src) { '${a#b} ${a##\'b\'} ${!a%${x}}' }
       let(:root_list) do
         [
           n(:pipelines,
@@ -354,7 +354,9 @@ describe Sharpnesh::Parser do
                                assigns: [],
                                body: [
                                  n(:pattern_rm, ref: false, body: 'a', mode: '#', pattern: n(:str, body: 'b')),
-                                 n(:pattern_rm, ref: false, body: 'a', mode: '##', pattern: n(:sstr, body: 'b'))
+                                 n(:pattern_rm, ref: false, body: 'a', mode: '##', pattern: n(:sstr, body: 'b')),
+                                 n(:pattern_rm, ref: true, body: 'a', mode: '%',
+                                                pattern: n(:param_ex, ref: false, body: 'x'))
                                ])),
             terminal: nil)
         ]
