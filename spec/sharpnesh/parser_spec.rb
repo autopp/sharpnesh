@@ -366,6 +366,29 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with case modification' do
+      let(:src) { '${a^b} ${a^^\'b\'} ${!a,${x}} ${!a,,}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:case_mod, ref: false, body: 'a', mode: '^', pattern: n(:str, body: 'b')),
+                                 n(:case_mod, ref: false, body: 'a', mode: '^^', pattern: n(:sstr, body: 'b')),
+                                 n(:case_mod, ref: true, body: 'a', mode: ',',
+                                              pattern: n(:param_ex, ref: false, body: 'x')),
+                                 n(:case_mod, ref: true, body: 'a', mode: ',,', pattern: n(:empty))
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with prefix expansions' do
       let(:src) { '${!foo*} ${!foo@}' }
       let(:root_list) do

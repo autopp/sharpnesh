@@ -118,7 +118,8 @@ module Sharpnesh
           length = lexer.accept(/:/, nil, allow_blank: true) ? parse_arith(lexer) : Node.new(:empty)
           lexer.skip_blank
           Node.new(:substr, ref: ref, body: param.body, offset: offset, length: length)
-        elsif (mode = lexer.accept(/\#{1,2}|%{1,2}/, nil))
+        elsif (mode = lexer.accept(/[#]{1,2}|%{1,2}|\^{1,2}|[,]{1,2}/, nil))
+          type = mode.body.start_with?('#', '%') ? :pattern_rm : :case_mod
           pattern = if lexer.peek(TK_RBRACE)
             Node.new(:empty)
           else
@@ -126,7 +127,7 @@ module Sharpnesh
               parse_word(lexer)
             end
           end
-          Node.new(:pattern_rm, ref: ref, body: param.body, mode: mode.body, pattern: pattern)
+          Node.new(type, ref: ref, body: param.body, mode: mode.body, pattern: pattern)
         elsif lexer.accept(/[@]/, nil)
           op = lexer.accept(/[QPEAa]/, nil)
           if op
