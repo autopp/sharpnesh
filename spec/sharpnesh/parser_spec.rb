@@ -366,6 +366,26 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with pattern_subst' do
+      let(:src) { '${a/b/c}' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:pattern_subst, ref: false, body: 'a',
+                                                   pattern: n(:str, body: 'b'), replace: n(:str, body: 'c'))
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { pending; is_expected.to eq(expected) }
+    end
+
     context 'with case modification' do
       let(:src) { '${a^b} ${a^^\'b\'} ${!a,${x}} ${!a,,}' }
       let(:root_list) do
