@@ -133,8 +133,12 @@ module Sharpnesh
             parse_word(lexer)
           end
           raise ParseError, 'expect `/`' if !lexer.accept(%r{/}, nil)
-          replace = lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
-            parse_word(lexer)
+          replace = if lexer.peek(TK_RBRACE)
+            Node.new(:empty)
+          else
+            lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
+              parse_word(lexer)
+            end
           end
           Node.new(:pattern_subst, ref: ref, body: param.body, pattern: pattern, replace: replace)
         elsif lexer.accept(/[@]/, nil)

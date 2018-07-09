@@ -366,8 +366,8 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with pattern_subst' do
-      let(:src) { '${a/b/c}' }
+    context 'with pattern substitution' do
+      let(:src) { '${a/b/c} ${a/\'b\'/${x}} ${!a/b/}' }
       let(:root_list) do
         [
           n(:pipelines,
@@ -377,7 +377,12 @@ describe Sharpnesh::Parser do
                                assigns: [],
                                body: [
                                  n(:pattern_subst, ref: false, body: 'a',
-                                                   pattern: n(:str, body: 'b'), replace: n(:str, body: 'c'))
+                                                   pattern: n(:str, body: 'b'), replace: n(:str, body: 'c')),
+                                 n(:pattern_subst, ref: false, body: 'a',
+                                                   pattern: n(:sstr, body: 'b'),
+                                                   replace: n(:param_ex, ref: false, body: 'x')),
+                                 n(:pattern_subst, ref: true, body: 'a',
+                                                   pattern: n(:str, body: 'b'), replace: n(:empty))
                                ])),
             terminal: nil)
         ]
