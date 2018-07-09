@@ -128,6 +128,15 @@ module Sharpnesh
             end
           end
           Node.new(type, ref: ref, body: param.body, mode: mode.body, pattern: pattern)
+        elsif lexer.accept(%r{/}, nil)
+          pattern = lexer.use_rules(gen_word_rules('/'), allow_blank: true) do
+            parse_word(lexer)
+          end
+          raise ParseError, 'expect `/`' if !lexer.accept(%r{/}, nil)
+          replace = lexer.use_rules(gen_word_rules('}'), allow_blank: true) do
+            parse_word(lexer)
+          end
+          Node.new(:pattern_subst, ref: ref, body: param.body, pattern: pattern, replace: replace)
         elsif lexer.accept(/[@]/, nil)
           op = lexer.accept(/[QPEAa]/, nil)
           if op
