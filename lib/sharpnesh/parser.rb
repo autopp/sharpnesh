@@ -13,6 +13,8 @@ module Sharpnesh
       { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
       { pattern: /\$([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_DOLLAR_VAR },
       { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
+      { pattern: /\$\(\(/, method: :on_token, opt: TK_DOLLAR_LPAREN2 },
+      { pattern: /\)\)/, method: :on_token, opt: TK_RPAREN2 },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
@@ -80,9 +82,17 @@ module Sharpnesh
         Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
       elsif lexer.next(TK_DOLLAR_LBRACE)
         parse_expansion(lexer)
+      elsif lexer.next(TK_DOLLAR_LPAREN2)
+        parse_arith_expansion(lexer)
       else
         raise ParseError, "unexpected token: #{lexer.peek}"
       end
+    end
+
+    def parse_arith_expansion(lexer)
+      body = parse_arith(lexer)
+      raise ParseError, 'expect `))`' if !lexer.next(TK_RPAREN2)
+      Node.new(:arith_ex, body: body)
     end
 
     ARITH_RULES = [
