@@ -456,6 +456,23 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with a arithmetic expansion' do
+      let(:src) { '$(( 0 ))' }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [n(:arith_ex, body: n(:number, value: '0'))])),
+            terminal: nil)
+        ]
+      end
+
+      it { pending; is_expected.to eq(expected) }
+    end
+
     context 'with a single quoted string' do
       let(:src) { "foo 'bar baz'" }
       let(:root_list) do
