@@ -8,6 +8,9 @@ module Sharpnesh
     require 'sharpnesh/parser/expansion'
     include Expansion
 
+    require 'sharpnesh/parser/arith'
+    include Arith
+
     DEFAULT_RULES = [
       { pattern: /([^$|&;()<> \t\n"']|\\[$|&;()<> \t"'])+/, method: :on_token, opt: TK_STR },
       { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
@@ -93,17 +96,6 @@ module Sharpnesh
       body = parse_arith(lexer)
       raise ParseError, 'expect `))`' if !lexer.next(TK_RPAREN2)
       Node.new(:arith_ex, body: body)
-    end
-
-    ARITH_RULES = [
-      { pattern: /\d+/, method: :on_token, opt: TK_NUMBER }
-    ].freeze
-    def parse_arith(lexer)
-      lexer.use_rules(ARITH_RULES, allow_blank: true) do
-        # TODO: parsing full syntax
-        raise ParseError, 'expect number' if !(token = lexer.next(TK_NUMBER))
-        Node.new(:number, value: token.body)
-      end
     end
 
     def gen_word_rules(sep)
