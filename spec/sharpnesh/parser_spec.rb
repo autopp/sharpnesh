@@ -475,6 +475,13 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with a variable' do
+        let(:src) { '$(( x ))' }
+        let(:body) { n(:var, name: 'x') }
+
+        it { pending; is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
