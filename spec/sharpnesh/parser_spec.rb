@@ -457,7 +457,6 @@ describe Sharpnesh::Parser do
     end
 
     context 'with a arithmetic expansion' do
-      let(:src) { '$(( 0 ))' }
       let(:root_list) do
         [
           n(:pipelines,
@@ -465,12 +464,17 @@ describe Sharpnesh::Parser do
                     excl: nil,
                     command: n(:simple_command,
                                assigns: [],
-                               body: [n(:arith_ex, body: n(:number, value: '0'))])),
+                               body: [n(:arith_ex, body: body)])),
             terminal: nil)
         ]
       end
 
-      it { is_expected.to eq(expected) }
+      context 'with number literal' do
+        let(:src) { '$(( 0 ))' }
+        let(:body) { n(:number, value: '0') }
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
