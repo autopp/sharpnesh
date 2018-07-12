@@ -480,7 +480,7 @@ describe Sharpnesh::Parser do
         let(:src) { '$(( x ))' }
         let(:body) { n(:var, name: 'x') }
 
-        it { pending; is_expected.to eq(expected) }
+        it { is_expected.to eq(expected) }
       end
     end
 
