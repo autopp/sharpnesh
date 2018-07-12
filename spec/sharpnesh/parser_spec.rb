@@ -489,6 +489,13 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with a comma operator' do
+        let(:src) { '$((x, y))' }
+        let(:body) { n(:binop, op: ',', left: n(:var, name: 'x'), right: n(:var, name: 'y')) }
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do

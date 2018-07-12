@@ -7,13 +7,20 @@ module Sharpnesh
 
       ARITH_RULES = [
         { pattern: /\d+/, method: :on_token, opt: TK_NUMBER },
-        { pattern: /\$?[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR }
+        { pattern: /\$?[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR },
+        { pattern: /,/, method: :on_token, opt: TK_COMMA }
       ].freeze
 
       def parse_arith(lexer)
         lexer.use_rules(ARITH_RULES, allow_blank: true) do
-          parse_primary_expr(lexer)
+          parse_comma_expr(lexer)
         end
+      end
+
+      def parse_comma_expr(lexer)
+        expr = parse_primary_expr(lexer)
+        expr = Node.new(:binop, op: ',', left: expr, right: parse_primary_expr(lexer)) while lexer.next(TK_COMMA)
+        expr
       end
 
       def parse_primary_expr(lexer)
