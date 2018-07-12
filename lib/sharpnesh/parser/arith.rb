@@ -7,7 +7,7 @@ module Sharpnesh
 
       ARITH_RULES = [
         { pattern: /\d+/, method: :on_token, opt: TK_NUMBER },
-        { pattern: /[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR }
+        { pattern: /\$?[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR }
       ].freeze
 
       def parse_arith(lexer)
