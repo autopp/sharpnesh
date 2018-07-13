@@ -500,6 +500,15 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with a assignment' do
+        let(:src) { '$((x = 0))' }
+        let(:body) do
+          n(:binop, op: '=', left: n(:var, name: 'x'), right: n(:number, value: '0'))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
