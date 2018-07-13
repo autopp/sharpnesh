@@ -491,8 +491,12 @@ describe Sharpnesh::Parser do
       end
 
       context 'with a comma operator' do
-        let(:src) { '$((x, y))' }
-        let(:body) { n(:binop, op: ',', left: n(:var, name: 'x'), right: n(:var, name: 'y')) }
+        let(:src) { '$((x, y, z))' }
+        let(:body) do
+          n(:binop, op: ',',
+                    left: n(:binop, op: ',', left: n(:var, name: 'x'), right: n(:var, name: 'y')),
+                    right: n(:var, name: 'z'))
+        end
 
         it { is_expected.to eq(expected) }
       end
