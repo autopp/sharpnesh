@@ -509,6 +509,35 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with multiple assignments' do
+        let(:src) { '$((a = b *= c /= d %= e += f -= g <<= h >>= i &= j ^= k |= 0))' }
+        let(:body) do
+          n(:binop, op: '=', left: n(:var, name: 'a'), right: n(
+            :binop, op: '*=', left: n(:var, name: 'b'), right: n(
+              :binop, op: '/=', left: n(:var, name: 'c'), right: n(
+                :binop, op: '%=', left: n(:var, name: 'd'), right: n(
+                  :binop, op: '+=', left: n(:var, name: 'e'), right: n(
+                    :binop, op: '-=', left: n(:var, name: 'f'), right: n(
+                      :binop, op: '<<=', left: n(:var, name: 'g'), right: n(
+                        :binop, op: '>>=', left: n(:var, name: 'h'), right: n(
+                          :binop, op: '&=', left: n(:var, name: 'i'), right: n(
+                            :binop, op: '^=', left: n(:var, name: 'j'), right: n(
+                              :binop, op: '|=', left: n(:var, name: 'k'), right: n(:number, value: '0')
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          ))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do

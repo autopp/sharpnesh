@@ -9,7 +9,7 @@ module Sharpnesh
         { pattern: /\d+/, method: :on_token, opt: TK_NUMBER },
         { pattern: /\$?[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR },
         { pattern: /,/, method: :on_token, opt: TK_COMMA },
-        { pattern: /\=/, method: :on_token, opt: TK_ASSIGN }
+        { pattern: %r{([-+*/%^&|]|<<|>>)?\=}, method: :on_token, opt: TK_ASSIGN }
       ].freeze
 
       def parse_arith(lexer)
