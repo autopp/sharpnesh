@@ -538,6 +538,13 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with ternary operator' do
+        let(:src) { '$((x ? y : z))' }
+        let(:body) { n(:terop, cond: n(:var, name: 'x'), then: n(:var, name: 'y'), else: n(:var, name: 'z')) }
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do

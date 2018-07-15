@@ -9,7 +9,9 @@ module Sharpnesh
         { pattern: /\d+/, method: :on_token, opt: TK_NUMBER },
         { pattern: /\$?[a-zA-Z_][a-zA-Z_0-9]*/, method: :on_token, opt: TK_VAR },
         { pattern: /,/, method: :on_token, opt: TK_COMMA },
-        { pattern: %r{([-+*/%^&|]|<<|>>)?\=}, method: :on_token, opt: TK_ASSIGN }
+        { pattern: %r{([-+*/%^&|]|<<|>>)?\=}, method: :on_token, opt: TK_ASSIGN },
+        { pattern: /[?]/, method: :on_token, opt: TK_QUESTION },
+        { pattern: /:/, method: :on_token, opt: TK_COLON }
       ].freeze
 
       def parse_arith(lexer)
@@ -30,11 +32,19 @@ module Sharpnesh
             Node.new(:binop, op: op.body, left: Node.new(:var, name: left.body), right: parse_assign_expr(lexer))
           else
             lexer.back
-            parse_primary_expr(lexer)
+            parse_ternary_op_expr(lexer)
           end
         else
-          parse_primary_expr(lexer)
+          parse_ternary_op_expr(lexer)
         end
+      end
+
+      def parse_ternary_op_expr(lexer)
+        cond = parse_primary_expr(lexer)
+        return cond if !lexer.next(TK_QUESTION)
+        then_expr = parse_comma_expr(lexer)
+        raise ParseError, 'expected `:`' if !lexer.next(TK_COLON)
+        Node.new(:terop, cond: cond, then: then_expr, else: parse_ternary_op_expr(lexer))
       end
 
       def parse_primary_expr(lexer)
