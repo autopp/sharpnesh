@@ -560,6 +560,17 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with a logical OR operator' do
+        let(:src) { '$((a ? b : c || d))' }
+        let(:body) do
+          n(:terop, cond: n(:var, name: 'a'),
+                    then: n(:var, name: 'b'),
+                    else: n(:binop, op: '||', left: n(:var, name: 'c'), right: n(:var, name: 'd')))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
