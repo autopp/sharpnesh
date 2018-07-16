@@ -545,6 +545,21 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with nested ternary operators' do
+        let(:src) { '$((a ? b ? c : d, e : f ? g : h))' }
+        let(:body) do
+          n(:terop, cond: n(:var, name: 'a'),
+                    then: n(:binop, op: ',',
+                                    left: n(:terop, cond: n(:var, name: 'b'),
+                                                    then: n(:var, name: 'c'),
+                                                    else: n(:var, name: 'd')),
+                                    right: n(:var, name: 'e')),
+                    else: n(:terop, cond: n(:var, name: 'f'), then: n(:var, name: 'g'), else: n(:var, name: 'h')))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
