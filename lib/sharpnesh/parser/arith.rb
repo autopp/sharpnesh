@@ -12,7 +12,8 @@ module Sharpnesh
         { pattern: %r{([-+*/%^&|]|<<|>>)?\=}, method: :on_token, opt: TK_ASSIGN },
         { pattern: /[?]/, method: :on_token, opt: TK_QUESTION },
         { pattern: /:/, method: :on_token, opt: TK_COLON },
-        { pattern: /[|]{2}/, method: :on_token, opt: TK_LOR }
+        { pattern: /[|]{2}/, method: :on_token, opt: TK_LOR },
+        { pattern: /[&]{2}/, method: :on_token, opt: TK_LAND }
       ].freeze
 
       def parse_arith(lexer)
@@ -41,16 +42,30 @@ module Sharpnesh
       end
 
       def parse_ternary_op_expr(lexer)
-        cond = parse_lor_expr(lexer)
+        cond = parse_binary_op_expr(lexer, 0)
         return cond if !lexer.next(TK_QUESTION)
         then_expr = parse_comma_expr(lexer)
         raise ParseError, 'expected `:`' if !lexer.next(TK_COLON)
         Node.new(:terop, cond: cond, then: then_expr, else: parse_ternary_op_expr(lexer))
       end
 
-      def parse_lor_expr(lexer)
-        expr = parse_primary_expr(lexer)
-        expr = Node.new(:binop, op: '||', left: expr, right: parse_lor_expr(lexer)) while lexer.next(TK_LOR)
+      BINOP_INFOS = [
+        { op: '||', token: TK_LOR },
+        { op: '&&', token: TK_LAND }
+      ].freeze
+      def parse_binary_op_expr(lexer, index)
+        current = BINOP_INFOS[index]
+        op = current[:op]
+        token = current[:token]
+        next_index = index + 1
+        operand_proc = if next_index < BINOP_INFOS.size
+          proc { parse_binary_op_expr(lexer, next_index) }
+        else
+          proc { parse_primary_expr(lexer) }
+        end
+
+        expr = operand_proc.call
+        expr = Node.new(:binop, op: op, left: expr, right: parse_binary_op_expr(lexer, index)) while lexer.next(token)
         expr
       end
 
