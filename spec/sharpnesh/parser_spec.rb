@@ -591,6 +591,16 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with bitwise OR operator and bitwise XOR operator' do
+        let(:src) { '$((a | b ^ c))' }
+        let(:body) do
+          n(:binop, op: '|', left: n(:var, name: 'a'),
+                    right: n(:binop, op: '^', left: n(:var, name: 'b'), right: n(:var, name: 'c')))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
