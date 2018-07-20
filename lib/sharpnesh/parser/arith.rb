@@ -15,7 +15,8 @@ module Sharpnesh
         { pattern: /[|]{2}/, method: :on_token, opt: TK_LOR },
         { pattern: /[&]{2}/, method: :on_token, opt: TK_LAND },
         { pattern: /[|]/, method: :on_token, opt: TK_BOR },
-        { pattern: /\^/, method: :on_token, opt: TK_BXOR }
+        { pattern: /\^/, method: :on_token, opt: TK_BXOR },
+        { pattern: /&/, method: :on_token, opt: TK_BAND }
       ].freeze
 
       def parse_arith(lexer)
@@ -55,7 +56,8 @@ module Sharpnesh
         { op: '||', token: TK_LOR },
         { op: '&&', token: TK_LAND },
         { op: '|', token: TK_BOR },
-        { op: '^', token: TK_BXOR }
+        { op: '^', token: TK_BXOR },
+        { op: '&', token: TK_BAND }
       ].freeze
       def parse_binary_op_expr(lexer, index)
         current = BINOP_INFOS[index]
