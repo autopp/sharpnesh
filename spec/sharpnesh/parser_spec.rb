@@ -582,7 +582,7 @@ describe Sharpnesh::Parser do
         it { is_expected.to eq(expected) }
       end
 
-      context 'with logical AND operator and logical bitwise OR operator' do
+      context 'with logical AND operator and bitwise OR operator' do
         let(:src) { '$((a && b | c))' }
         let(:body) do
           n(:binop, op: '&&', left: n(:var, name: 'a'),
