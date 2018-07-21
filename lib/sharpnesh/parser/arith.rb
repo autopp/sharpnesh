@@ -53,16 +53,14 @@ module Sharpnesh
       end
 
       BINOP_INFOS = [
-        { op: '||', token: TK_LOR },
-        { op: '&&', token: TK_LAND },
-        { op: '|', token: TK_BOR },
-        { op: '^', token: TK_BXOR },
-        { op: '&', token: TK_BAND }
+        TK_LOR,
+        TK_LAND,
+        TK_BOR,
+        TK_BXOR,
+        TK_BAND
       ].freeze
       def parse_binary_op_expr(lexer, index)
-        current = BINOP_INFOS[index]
-        op = current[:op]
-        token = current[:token]
+        token = BINOP_INFOS[index]
         next_index = index + 1
         operand_proc = if next_index < BINOP_INFOS.size
           proc { parse_binary_op_expr(lexer, next_index) }
@@ -71,7 +69,9 @@ module Sharpnesh
         end
 
         expr = operand_proc.call
-        expr = Node.new(:binop, op: op, left: expr, right: parse_binary_op_expr(lexer, index)) while lexer.next(token)
+        while (op = lexer.next(token))
+          expr = Node.new(:binop, op: op.body, left: expr, right: parse_binary_op_expr(lexer, index))
+        end
         expr
       end
 
