@@ -56,9 +56,9 @@ class Sharpnesh::Parser
     TK_EQL = :==
     TK_NEQ = :'!='
     TK_LEQ = :<=
-    TK_REQ = :>=
+    TK_GEQ = :>=
     TK_LTN = :<
-    TK_RTN = :>
+    TK_GTN = :>
     TK_LSHIFT = :<<
     TK_RSHIFT = :>>
     TK_ADD = :+
