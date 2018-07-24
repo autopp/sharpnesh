@@ -24,7 +24,9 @@ module Sharpnesh
         { pattern: /<=/, method: :on_token, opt: TK_LEQ },
         { pattern: /</, method: :on_token, opt: TK_LTN },
         { pattern: />=/, method: :on_token, opt: TK_GEQ },
-        { pattern: />/, method: :on_token, opt: TK_GTN }
+        { pattern: />/, method: :on_token, opt: TK_GTN },
+        { pattern: /\+/, method: :on_token, opt: TK_ADD },
+        { pattern: /-/, method: :on_token, opt: TK_SUB }
       ].freeze
 
       def parse_arith(lexer)
@@ -68,7 +70,8 @@ module Sharpnesh
         [TK_BAND],
         [TK_EQL, TK_NEQ],
         [TK_LTN, TK_LEQ, TK_GTN, TK_GEQ],
-        [TK_LSHIFT, TK_RSHIFT]
+        [TK_LSHIFT, TK_RSHIFT],
+        [TK_ADD, TK_SUB]
       ].freeze
       def parse_binary_op_expr(lexer, index)
         tokens = BINOP_INFOS[index]
