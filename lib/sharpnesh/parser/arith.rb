@@ -19,6 +19,8 @@ module Sharpnesh
         { pattern: /\^/, method: :on_token, opt: TK_BXOR },
         { pattern: /&/, method: :on_token, opt: TK_BAND },
         { pattern: /!=/, method: :on_token, opt: TK_NEQ },
+        { pattern: /<</, method: :on_token, opt: TK_LSHIFT },
+        { pattern: />>/, method: :on_token, opt: TK_RSHIFT },
         { pattern: /<=/, method: :on_token, opt: TK_LEQ },
         { pattern: /</, method: :on_token, opt: TK_LTN },
         { pattern: />=/, method: :on_token, opt: TK_GEQ },
@@ -66,6 +68,7 @@ module Sharpnesh
         [TK_BAND],
         [TK_EQL, TK_NEQ],
         [TK_LTN, TK_LEQ, TK_GTN, TK_GEQ],
+        [TK_LSHIFT, TK_RSHIFT]
       ].freeze
       def parse_binary_op_expr(lexer, index)
         tokens = BINOP_INFOS[index]
