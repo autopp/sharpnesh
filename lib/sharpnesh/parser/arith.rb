@@ -25,6 +25,7 @@ module Sharpnesh
         { pattern: /</, method: :on_token, opt: TK_LTN },
         { pattern: />=/, method: :on_token, opt: TK_GEQ },
         { pattern: />/, method: :on_token, opt: TK_GTN },
+        { pattern: /[*]{2}/, method: :on_token, opt: TK_EXP },
         { pattern: /\+/, method: :on_token, opt: TK_ADD },
         { pattern: /-/, method: :on_token, opt: TK_SUB },
         { pattern: /\*/, method: :on_token, opt: TK_MUL },
@@ -83,7 +84,7 @@ module Sharpnesh
         operand_proc = if next_index < BINOP_INFOS.size
           proc { parse_binary_op_expr(lexer, next_index) }
         else
-          proc { parse_primary_expr(lexer) }
+          proc { parse_exp_expr(lexer) }
         end
 
         expr = operand_proc.call
@@ -91,6 +92,15 @@ module Sharpnesh
           expr = Node.new(:binop, op: op.body, left: expr, right: parse_binary_op_expr(lexer, index))
         end
         expr
+      end
+
+      def parse_exp_expr(lexer)
+        expr = parse_primary_expr(lexer)
+        if lexer.next(TK_EXP)
+          Node.new(:binop, op: '**', left: expr, right: parse_exp_expr(lexer))
+        else
+          expr
+        end
       end
 
       def parse_primary_expr(lexer)
