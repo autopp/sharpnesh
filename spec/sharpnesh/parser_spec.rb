@@ -761,6 +761,15 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with logical negation operator' do
+        let(:src) { '$((!a))' }
+        let(:body) do
+          n(:unop, op: '!', operand: n(:var, name: 'a'))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
