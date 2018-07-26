@@ -2,7 +2,7 @@ module Sharpnesh
   class Parser
     # Arith provides methods for parsing arithmetic expression
     #
-    module Arith
+    module Arith # rubocop:disable Metrics/ModuleLength
       include Sharpnesh::Parser::TokenType
 
       ARITH_RULES = [
