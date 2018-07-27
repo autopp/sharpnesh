@@ -31,7 +31,8 @@ module Sharpnesh
         { pattern: /\*/, method: :on_token, opt: TK_MUL },
         { pattern: %r{/}, method: :on_token, opt: TK_DIV },
         { pattern: /%/, method: :on_token, opt: TK_MOD },
-        { pattern: /!/, method: :on_token, opt: TK_NOT }
+        { pattern: /!/, method: :on_token, opt: TK_NOT },
+        { pattern: /~/, method: :on_token, opt: TK_BNOT }
       ].freeze
 
       def parse_arith(lexer)
@@ -105,7 +106,7 @@ module Sharpnesh
       end
 
       def parse_unary_op_expr(lexer)
-        if (op = lexer.next(TK_NOT))
+        if (op = lexer.next(TK_NOT, TK_BNOT))
           Node.new(:unop, op: op.body, operand: parse_unary_op_expr(lexer))
         else
           parse_primary_expr(lexer)

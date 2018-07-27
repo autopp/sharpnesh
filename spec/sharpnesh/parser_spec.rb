@@ -762,10 +762,19 @@ describe Sharpnesh::Parser do
         it { is_expected.to eq(expected) }
       end
 
-      context 'with logical negation operator' do
+      context 'with logical negation operators' do
         let(:src) { '$((!!a))' }
         let(:body) do
           n(:unop, op: '!', operand: n(:unop, op: '!', operand: n(:var, name: 'a')))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
+
+      context 'with logical negation operator and bitwise negation operator' do
+        let(:src) { '$((!~a))' }
+        let(:body) do
+          n(:unop, op: '!', operand: n(:unop, op: '~', operand: n(:var, name: 'a')))
         end
 
         it { is_expected.to eq(expected) }
