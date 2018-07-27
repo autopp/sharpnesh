@@ -763,9 +763,9 @@ describe Sharpnesh::Parser do
       end
 
       context 'with logical negation operator' do
-        let(:src) { '$((!a))' }
+        let(:src) { '$((!!a))' }
         let(:body) do
-          n(:unop, op: '!', operand: n(:var, name: 'a'))
+          n(:unop, op: '!', operand: n(:unop, op: '!', operand: n(:var, name: 'a')))
         end
 
         it { is_expected.to eq(expected) }
