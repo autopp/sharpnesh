@@ -106,7 +106,7 @@ module Sharpnesh
       end
 
       def parse_unary_op_expr(lexer)
-        if (op = lexer.next(TK_NOT, TK_BNOT))
+        if (op = lexer.next(TK_NOT, TK_BNOT, TK_SUB))
           Node.new(:unop, op: op.body, operand: parse_unary_op_expr(lexer))
         else
           parse_primary_expr(lexer)

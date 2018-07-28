@@ -779,6 +779,15 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with bitwise negation operator and unary minus operator' do
+        let(:src) { '$((~-a))' }
+        let(:body) do
+          n(:unop, op: '~', operand: n(:unop, op: '-', operand: n(:var, name: 'a')))
+        end
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
