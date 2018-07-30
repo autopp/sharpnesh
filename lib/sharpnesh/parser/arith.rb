@@ -27,6 +27,7 @@ module Sharpnesh
         { pattern: />/, method: :on_token, opt: TK_GTN },
         { pattern: /[*]{2}/, method: :on_token, opt: TK_EXP },
         { pattern: /[+]{2}/, method: :on_token, opt: TK_INC },
+        { pattern: /[-]{2}/, method: :on_token, opt: TK_INC },
         { pattern: /\+/, method: :on_token, opt: TK_ADD },
         { pattern: /-/, method: :on_token, opt: TK_SUB },
         { pattern: /\*/, method: :on_token, opt: TK_MUL },
@@ -107,7 +108,7 @@ module Sharpnesh
       end
 
       def parse_unary_op_expr(lexer)
-        if (op = lexer.next(TK_NOT, TK_BNOT, TK_SUB, TK_ADD, TK_INC))
+        if (op = lexer.next(TK_NOT, TK_BNOT, TK_SUB, TK_ADD, TK_INC, TK_DEC))
           Node.new(:unop, op: op.body, operand: parse_unary_op_expr(lexer))
         else
           parse_primary_expr(lexer)

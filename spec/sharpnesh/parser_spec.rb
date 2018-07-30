@@ -804,6 +804,13 @@ describe Sharpnesh::Parser do
 
         it { is_expected.to eq(expected) }
       end
+
+      context 'with pre-decrement operator' do
+        let(:src) { '$((--a))' }
+        let(:body) { n(:unop, op: '--', operand: n(:var, name: 'a')) }
+
+        it { is_expected.to eq(expected) }
+      end
     end
 
     context 'with a single quoted string' do
