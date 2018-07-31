@@ -111,7 +111,16 @@ module Sharpnesh
         if (op = lexer.next(TK_NOT, TK_BNOT, TK_SUB, TK_ADD, TK_INC, TK_DEC))
           Node.new(:unop, op: op.body, operand: parse_unary_op_expr(lexer))
         else
-          parse_primary_expr(lexer)
+          parse_postfix_op_expr(lexer)
+        end
+      end
+
+      def parse_postfix_op_expr(lexer)
+        expr = parse_primary_expr(lexer)
+        if (op = lexer.next(TK_INC))
+          Node.new(:postop, op: op.body, operand: expr)
+        else
+          expr
         end
       end
 
