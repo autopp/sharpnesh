@@ -117,7 +117,7 @@ module Sharpnesh
 
       def parse_postfix_op_expr(lexer)
         expr = parse_primary_expr(lexer)
-        if (op = lexer.next(TK_INC))
+        if (op = lexer.next(TK_INC, TK_DEC))
           Node.new(:postop, op: op.body, operand: expr)
         else
           expr
