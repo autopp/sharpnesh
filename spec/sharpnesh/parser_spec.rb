@@ -433,7 +433,7 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
-    context 'with parameter transfomations' do
+    context 'with parameter transformations' do
       let(:src) { '${foo@Q} ${foo@E} ${foo@P} ${!foo@A} ${!foo@a}' }
       let(:root_list) do
         [
