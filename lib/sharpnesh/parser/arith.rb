@@ -34,7 +34,8 @@ module Sharpnesh
         { pattern: %r{/}, method: :on_token, opt: TK_DIV },
         { pattern: /%/, method: :on_token, opt: TK_MOD },
         { pattern: /!/, method: :on_token, opt: TK_NOT },
-        { pattern: /~/, method: :on_token, opt: TK_BNOT }
+        { pattern: /~/, method: :on_token, opt: TK_BNOT },
+        { pattern: /\(/, method: :on_token, opt: TK_LPAREN }
       ].freeze
 
       def parse_arith(lexer)
@@ -125,7 +126,11 @@ module Sharpnesh
       end
 
       def parse_primary_expr(lexer)
-        if (number = lexer.next(TK_NUMBER))
+        if lexer.next(TK_LPAREN)
+          node = Node.new(:parentheses, body: parse_comma_expr(lexer))
+          raise ParseError, 'expect right parentheses' if !lexer.accept(/\)/, TK_RPAREN)
+          node
+        elsif (number = lexer.next(TK_NUMBER))
           Node.new(:number, value: number.body)
         elsif (var = lexer.next(TK_VAR))
           Node.new(:var, name: var.body)
