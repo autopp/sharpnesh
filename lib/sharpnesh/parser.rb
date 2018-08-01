@@ -84,7 +84,7 @@ module Sharpnesh
       elsif (dollar_var = lexer.next(TK_DOLLAR_VAR))
         Node.new(:simple_param_ex, body: dollar_var.body[1..-1])
       elsif lexer.next(TK_DOLLAR_LBRACE)
-        parse_expansion(lexer)
+        parse_param_expansion(lexer)
       elsif lexer.next(TK_DOLLAR_LPAREN2)
         parse_arith_expansion(lexer)
       else

@@ -12,7 +12,7 @@ module Sharpnesh
         { pattern: /}/, method: :on_token, opt: TK_RBRACE }
       ].freeze
 
-      def parse_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
+      def parse_param_expansion(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
         lexer.use_rules(EXPANSION_RULES, allow_blank: false) do # rubocop:disable Metrics/BlockLength
           # check length `#`
           len = !!lexer.accept(/#/, TK_SHARP)
