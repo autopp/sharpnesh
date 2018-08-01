@@ -5,8 +5,8 @@ module Sharpnesh
     require 'sharpnesh/parser/token_type'
     include TokenType
 
-    require 'sharpnesh/parser/expansion'
-    include Expansion
+    require 'sharpnesh/parser/parameter'
+    include Parameter
 
     require 'sharpnesh/parser/arith'
     include Arith

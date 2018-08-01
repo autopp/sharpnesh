@@ -2,7 +2,7 @@ module Sharpnesh
   class Parser
     # Expansion provides methods for parsing expansion
     #
-    module Expansion
+    module Parameter
       include Sharpnesh::Parser::TokenType
 
       EXPANSION_RULES = [
