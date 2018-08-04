@@ -12,7 +12,7 @@ module Sharpnesh
     include Arith
 
     DEFAULT_RULES = [
-      { pattern: /([^$|&;()<> \t\n"']|\\[$|&;()<> \t"'])+/, method: :on_token, opt: TK_STR },
+      { pattern: /([^$|&;()<> \t\n"'`]|\\[$|&;()<> \t"'`])+/, method: :on_token, opt: TK_STR },
       { pattern: /'([^']|(\\'))*'/, method: :on_token, opt: TK_SQUOTE },
       { pattern: /\$([0-9]|([a-zA-Z_]\w*)|[-*@#?$!])/, method: :on_token, opt: TK_DOLLAR_VAR },
       { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
@@ -20,39 +20,40 @@ module Sharpnesh
       { pattern: /\$\(/, method: :on_token, opt: TK_DOLLAR_LPAREN },
       { pattern: /\)\)/, method: :on_token, opt: TK_RPAREN2 },
       { pattern: /\)/, method: :on_token, opt: TK_RPAREN },
+      { pattern: /`/, method: :on_token, opt: TK_BQUOTE },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
 
     def parse(io, name)
       lexer = Lexer.new(io, name)
       lexer.use_rules(DEFAULT_RULES, allow_blank: true) do
-        Node.new(:root, list: parse_list(lexer, TK_EOS))
+        Node.new(:root, list: parse_list(lexer, TK_EOS, false))
       end
     end
 
-    def parse_list(lexer, terminal)
+    def parse_list(lexer, terminal, bquoted)
       list = []
-      list << parse_pipelines(lexer) while !lexer.peek(terminal)
+      list << parse_pipelines(lexer, bquoted) while !lexer.peek(terminal)
       list
     end
 
-    def parse_pipelines(lexer)
-      pipeline = parse_pipeline(lexer)
+    def parse_pipelines(lexer, bquoted)
+      pipeline = parse_pipeline(lexer, bquoted)
       terminal = (terminal_token = lexer.next(TK_SEMICOLON, TK_NEWLINE, TK_AND)) ? terminal_token.body : nil
       Node.new(:pipelines, body: pipeline, terminal: terminal)
     end
 
-    def parse_pipeline(lexer)
+    def parse_pipeline(lexer, bquoted)
       not_op = lexer.next(TK_NOT)
-      command = parse_command(lexer)
+      command = parse_command(lexer, bquoted)
       while (pipe = lexer.next(TK_PIPE, TK_PIPE_AND))
-        command = Node.new(:pipe, pipe: pipe, lhs: command, rhs: parse_command(lexer))
+        command = Node.new(:pipe, pipe: pipe, lhs: command, rhs: parse_command(lexer, bquoted))
       end
       Node.new(:pipeline, excl: not_op, command: command)
     end
 
-    def parse_command(lexer)
-      parse_simple_command(lexer)
+    def parse_command(lexer, bquoted)
+      parse_simple_command(lexer, bquoted)
     end
 
     CONTROL_OPERATORS = [
@@ -62,7 +63,7 @@ module Sharpnesh
       TK_PIPE, TK_PIPE_AND,
       TK_NEWLINE, TK_EOS
     ].freeze
-    def parse_simple_command(lexer)
+    def parse_simple_command(lexer, bquoted)
       # parse assignments
       assigns = []
       while (assign = lexer.accept(/[a-zA-Z0-9][a-zA-Z0-9_]*=/, TK_ASSIGN_HEAD))
@@ -73,7 +74,7 @@ module Sharpnesh
 
       # parse command body
       body = [parse_word(lexer)]
-      body << parse_word(lexer) while !lexer.peek(*CONTROL_OPERATORS)
+      body << parse_word(lexer) while !lexer.peek(*(bquoted ? CONTROL_OPERATORS + [TK_BQUOTE] : CONTROL_OPERATORS))
 
       Node.new(:simple_command, assigns: assigns, body: body)
     end
@@ -91,6 +92,8 @@ module Sharpnesh
         parse_arith_expansion(lexer)
       elsif lexer.next(TK_DOLLAR_LPAREN)
         parse_command_subst(lexer)
+      elsif lexer.next(TK_BQUOTE)
+        parse_bquote_str(lexer)
       else
         raise ParseError, "unexpected token: #{lexer.peek}"
       end
@@ -103,9 +106,15 @@ module Sharpnesh
     end
 
     def parse_command_subst(lexer)
-      list = parse_list(lexer, TK_RPAREN)
+      list = parse_list(lexer, TK_RPAREN, false)
       raise ParseErrorm 'expect `)`' if !lexer.next(TK_RPAREN)
       Node.new(:command_subst, style: '$', list: list)
+    end
+
+    def parse_bquote_str(lexer)
+      list = parse_list(lexer, TK_BQUOTE, true)
+      raise ParseErrorm 'expect ```' if !lexer.next(TK_BQUOTE)
+      Node.new(:command_subst, style: '`', list: list)
     end
 
     def gen_word_rules(sep)
