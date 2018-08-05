@@ -1,7 +1,7 @@
 module Sharpnesh
   # Parser provides features of parsing a bash script
   #
-  class Parser
+  class Parser # rubocop:disable Metrics/ClassLength
     require 'sharpnesh/parser/token_type'
     include TokenType
 
@@ -79,7 +79,7 @@ module Sharpnesh
       Node.new(:simple_command, assigns: assigns, body: body)
     end
 
-    def parse_word(lexer)
+    def parse_word(lexer) # rubocop:disable Metrics/AbcSize,Metrics/CyclomaticComplexity,Metrics/MethodLength,Metrics/PerceivedComplexity,Metrics/LineLength
       if (str = lexer.next(TK_STR))
         Node.new(:str, body: str.body)
       elsif (sstr = lexer.next(TK_SQUOTE))
