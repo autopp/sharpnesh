@@ -52,29 +52,29 @@ module Sharpnesh
       Node.new(:pipeline, excl: not_op, command: command)
     end
 
-    def parse_command(lexer, bquoted)
-      parse_simple_command(lexer, bquoted)
-    end
-
-    CONTROL_OPERATORS = [
+    DEFAULT_CONTROL_OPERATORS = [
       TK_LOR, TK_AND, TK_LAND, TK_SEMICOLON,
       TK_SEMICOLON2, TK_SEMICOLON_AND, TK_SEMICOLON2_AND,
       TK_LPAREN, TK_RPAREN,
       TK_PIPE, TK_PIPE_AND,
       TK_NEWLINE, TK_EOS
     ].freeze
-    def parse_simple_command(lexer, bquoted)
+    def parse_command(lexer, bquoted)
+      parse_simple_command(lexer, bquoted ? DEFAULT_CONTROL_OPERATORS + [TK_BQUOTE] : DEFAULT_CONTROL_OPERATORS)
+    end
+
+    def parse_simple_command(lexer, control_operators)
       # parse assignments
       assigns = []
       while (assign = lexer.accept(/[a-zA-Z0-9][a-zA-Z0-9_]*=/, TK_ASSIGN_HEAD))
         head = lexer.peek
-        value = head.blank.empty? && !CONTROL_OPERATORS.include?(head.type) ? parse_word(lexer) : nil
+        value = head.blank.empty? && !control_operators.include?(head.type) ? parse_word(lexer) : nil
         assigns << Node.new(:assign, name: assign.body[0...-1], value: value)
       end
 
       # parse command body
       body = [parse_word(lexer)]
-      body << parse_word(lexer) while !lexer.peek(*(bquoted ? CONTROL_OPERATORS + [TK_BQUOTE] : CONTROL_OPERATORS))
+      body << parse_word(lexer) while !lexer.peek(*control_operators)
 
       Node.new(:simple_command, assigns: assigns, body: body)
     end
