@@ -18,7 +18,6 @@ module Sharpnesh
       { pattern: /\${/, method: :on_token, opt: TK_DOLLAR_LBRACE },
       { pattern: /\$\(\(/, method: :on_token, opt: TK_DOLLAR_LPAREN2 },
       { pattern: /\$\(/, method: :on_token, opt: TK_DOLLAR_LPAREN },
-      { pattern: /\)\)/, method: :on_token, opt: TK_RPAREN2 },
       { pattern: /\)/, method: :on_token, opt: TK_RPAREN },
       { pattern: /`/, method: :on_token, opt: TK_BQUOTE },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
@@ -101,7 +100,7 @@ module Sharpnesh
 
     def parse_arith_expansion(lexer)
       body = parse_arith(lexer)
-      raise ParseError, 'expect `))`' if !lexer.next(TK_RPAREN2)
+      raise ParseError, 'expect `))`' if !lexer.accept(/\)\)/, nil)
       Node.new(:arith_ex, body: body)
     end
 
