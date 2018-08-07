@@ -535,6 +535,31 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with process substitutions' do
+      let(:src) { 'foo <(bar)' }
+      let(:root_list) do
+        inner_command = n(:simple_command, assigns: [], body: [n(:str, body: 'bar')])
+
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command,
+                               assigns: [],
+                               body: [
+                                 n(:str, body: 'foo'),
+                                 n(:process_subst,
+                                   style: '<', list: [
+                                     n(:pipelines, body: n(:pipeline, excl: nil, command: inner_command), terminal: nil)
+                                   ])
+                               ])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with a arithmetic expansion' do
       let(:root_list) do
         [

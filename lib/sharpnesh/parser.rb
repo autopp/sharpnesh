@@ -19,6 +19,7 @@ module Sharpnesh
       { pattern: /\$\(\(/, method: :on_token, opt: TK_DOLLAR_LPAREN2 },
       { pattern: /\$\(/, method: :on_token, opt: TK_DOLLAR_LPAREN },
       { pattern: /\)/, method: :on_token, opt: TK_RPAREN },
+      { pattern: /<\(/, method: :on_token, opt: TK_IN_LPAREN },
       { pattern: /`/, method: :on_token, opt: TK_BQUOTE },
       { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
     ].freeze
@@ -91,6 +92,8 @@ module Sharpnesh
         parse_arith_expansion(lexer)
       elsif lexer.next(TK_DOLLAR_LPAREN)
         parse_command_subst(lexer)
+      elsif lexer.next(TK_IN_LPAREN)
+        parse_process_subst(lexer)
       elsif lexer.next(TK_BQUOTE)
         parse_bquote_str(lexer)
       else
@@ -108,6 +111,12 @@ module Sharpnesh
       list = parse_list(lexer, TK_RPAREN, false)
       raise ParseErrorm 'expect `)`' if !lexer.next(TK_RPAREN)
       Node.new(:command_subst, style: '$', list: list)
+    end
+
+    def parse_process_subst(lexer)
+      list = parse_list(lexer, TK_RPAREN, false)
+      raise ParseErrorm 'expect `)`' if !lexer.next(TK_RPAREN)
+      Node.new(:process_subst, style: '<', list: list)
     end
 
     def parse_bquote_str(lexer)
