@@ -536,9 +536,10 @@ describe Sharpnesh::Parser do
     end
 
     context 'with process substitutions' do
-      let(:src) { 'foo <(bar)' }
+      let(:src) { 'foo <(bar) >(baz)' }
       let(:root_list) do
-        inner_command = n(:simple_command, assigns: [], body: [n(:str, body: 'bar')])
+        in_command = n(:simple_command, assigns: [], body: [n(:str, body: 'bar')])
+        out_command = n(:simple_command, assigns: [], body: [n(:str, body: 'baz')])
 
         [
           n(:pipelines,
@@ -550,7 +551,11 @@ describe Sharpnesh::Parser do
                                  n(:str, body: 'foo'),
                                  n(:process_subst,
                                    style: '<', list: [
-                                     n(:pipelines, body: n(:pipeline, excl: nil, command: inner_command), terminal: nil)
+                                     n(:pipelines, body: n(:pipeline, excl: nil, command: in_command), terminal: nil)
+                                   ]),
+                                 n(:process_subst,
+                                   style: '>', list: [
+                                     n(:pipelines, body: n(:pipeline, excl: nil, command: out_command), terminal: nil)
                                    ])
                                ])),
             terminal: nil)
