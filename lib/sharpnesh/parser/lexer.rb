@@ -106,6 +106,14 @@ class Sharpnesh::Parser
       token
     end
 
+    def on_newline(body, blank, type)
+      token = Token.new(type, body, blank, @line, @col)
+      @col = 0
+      @line += 1
+      @tokens << token
+      token
+    end
+
     def reset_buffer
       @tokens.pop(@tokens.size - @next).each do |token|
         body = token.body

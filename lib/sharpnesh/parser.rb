@@ -22,7 +22,8 @@ module Sharpnesh
       { pattern: /<\(/, method: :on_token, opt: TK_IN_LPAREN },
       { pattern: />\(/, method: :on_token, opt: TK_OUT_LPAREN },
       { pattern: /`/, method: :on_token, opt: TK_BQUOTE },
-      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON }
+      { pattern: /;/, method: :on_token, opt: TK_SEMICOLON },
+      { pattern: /\n/, method: :on_newline, opt: TK_NEWLINE }
     ].freeze
 
     def parse(io, name)

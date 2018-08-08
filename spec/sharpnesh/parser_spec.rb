@@ -57,6 +57,26 @@ describe Sharpnesh::Parser do
       it { is_expected.to eq(expected) }
     end
 
+    context 'with two commands splited by newline' do
+      let(:src) { "foo\nbar" }
+      let(:root_list) do
+        [
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'foo')])),
+            terminal: "\n"),
+          n(:pipelines,
+            body: n(:pipeline,
+                    excl: nil,
+                    command: n(:simple_command, assigns: [], body: [n(:str, body: 'bar')])),
+            terminal: nil)
+        ]
+      end
+
+      it { is_expected.to eq(expected) }
+    end
+
     context 'with a assignment' do
       let(:src) { 'a=x foo' }
       let(:root_list) do
